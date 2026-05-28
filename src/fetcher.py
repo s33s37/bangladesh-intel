@@ -1,6 +1,5 @@
 """
 孟加拉商业情报日报 - 数据采集模块
-负责从所有配置源抓取过去24小时的新闻
 """
 
 import feedparser
@@ -22,18 +21,26 @@ def fetch_rss(url, source_name, hours=24):
         cutoff = datetime.utcnow() - timedelta(hours=hours)
         
         for entry in feed.entries:
-            published = entry.get('published', entry.get('updated', entry.get('pubDate', '')))
+            # 尝试多种时间字段
+            published = (entry.get('published') or 
+                        entry.get('updated') or 
+                        entry.get('pubDate') or 
+                        entry.get('date') or
+                        '')
             if not published:
-                continue
+                # 没有时间戳，但保留条目（给AI处理）
+                pub_date = datetime.utcnow()
+            else:
+                try:
+                    pub_date = date_parser.parse(published)
+                    if pub_date.tzinfo:
+                        pub_date = pub_date.replace(tzinfo=None)
+                except Exception:
+                    # 解析失败，用当前时间
+                    pub_date = datetime.utcnow()
             
-            try:
-                pub_date = date_parser.parse(published)
-                if pub_date.tzinfo:
-                    pub_date = pub_date.replace(tzinfo=None)
-            except Exception:
-                continue
-            
-            if pub_date >= cutoff:
+            # 放宽时间限制：保留过去72小时的内容（避免时区问题）
+            if pub_date >= (datetime.utcnow() - timedelta(hours=72)):
                 summary = entry.get('summary', '')
                 description = entry.get('description', '')
                 content = entry.get('content', [{}])[0].get('value', '') if entry.get('content') else ''
@@ -75,6 +82,7 @@ def fetch_all_sources(hours=24):
             print(f"  [{i}/{len(sources)}] {src['name']}: {len(entries)} entries")
         else:
             print(f"  [{i}/{len(sources)}] {src['name']}: 0 entries")
+        all_entries.extend(entries)
         time.sleep(0.3)
     
     # 去重
