@@ -39,7 +39,7 @@ def run_daily(test_mode=False):
     if not entries:
         print("[WARN] 未采集到任何新闻，生成空报告")
         # 即使为空也生成报告，避免GitHub Pages断更
-        generate_html([], model_name="qwen-plus")
+        generate_html([], model_name="deepseek-chat")
         print("\n[COMPLETE] 空报告已生成")
         return
     
@@ -61,7 +61,7 @@ def run_daily(test_mode=False):
     
     # Step 3: 生成报告
     print("\n[STEP 3/3] 生成HTML报告...")
-    output_path = generate_html(analyzed, model_name="qwen-plus")
+    output_path = generate_html(analyzed, model_name="deepseek-chat")
     print(f"[OK] 报告已生成: {output_path}")
     
     # 统计摘要
