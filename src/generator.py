@@ -9,7 +9,7 @@ from datetime import datetime
 from src.config import SECTORS
 
 
-def generate_html(intel_items, output_dir="output", model_name="qwen-plus"):
+def generate_html(intel_items, output_dir="output", model_name="deepseek-chat"):
     """
     生成HTML日报报告
     intel_items: processor返回的结构化情报列表
