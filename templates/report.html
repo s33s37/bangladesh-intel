@@ -11,11 +11,15 @@
     --text: #1f2937;
     --muted: #6b7280;
     --accent: #0ea5e9;
-    --red: #dc2626;
+    --red: #be123c;          /* 降饱和深玫瑰红，仅用于边线/小徽章 */
+    --red-light: #fff1f2;    /* 极浅粉背景 */
+    --red-soft: #fee2e2;     /* 负面标签浅红底 */
+    --red-text: #991b1b;     /* 负面标签深红字 */
     --green: #059669;
     --amber: #d97706;
     --blue: #2563eb;
     --border: #e5e7eb;
+    --rose-border: #fecdd3;  /* 柔和玫瑰边框 */
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -66,8 +70,8 @@
     gap: 8px;
   }
   .alert-box {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
+    background: var(--red-light);
+    border: 1px solid var(--rose-border);
     border-left: 4px solid var(--red);
     border-radius: 10px;
     padding: 16px;
@@ -158,10 +162,16 @@
   }
   .tag-type { background: #e0f2fe; color: #0369a1; }
   .tag-pos { background: #d1fae5; color: #065f46; }
-  .tag-neg { background: #fee2e2; color: #991b1b; }
+  .tag-neg { background: var(--red-soft); color: var(--red-text); }
   .tag-neu { background: #f3f4f6; color: #4b5563; }
-  .tag-high { background: var(--red); color: #fff; }
-  .tag-mid { background: var(--amber); color: #fff; }
+  .tag-high {
+    background: var(--red);
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+  }
   .tag-src {
     background: transparent;
     border: 1px solid var(--border);
@@ -182,7 +192,7 @@
     flex-wrap: wrap;
   }
   .top-badge {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: var(--red);
     color: #fff;
     font-size: 10px;
     padding: 1px 6px;
@@ -190,6 +200,18 @@
     font-weight: 800;
     margin-right: 4px;
   }
+
+  /* === 高重要性条目：左边线 + 淡粉背景，取代全红背景 === */
+  .item.item-high {
+    background: var(--red-light);
+    border: 1px solid var(--rose-border);
+    border-left: 4px solid var(--red);
+    border-radius: 8px;
+    padding: 14px 12px;
+    margin: 8px 0;
+  }
+  .item.item-high:first-child { margin-top: 0; }
+  .item.item-high:last-child { margin-bottom: 0; }
 
   footer {
     text-align: center;
@@ -281,7 +303,8 @@
     <div class="sector-count">{{ sectors[sec]|length }} 条</div>
   </div>
   {% for item in sectors[sec][:8] %}
-  <div class="item {% if item.importance == '高' %}tag-high{% endif %}">
+  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
+  <div class="item {% if item.importance == '高' %}item-high{% endif %}">
     <div class="item-header">
       {% if item.importance == '高' %}<<span class="top-badge">TOP</span>{% endif %}
       <a href="{{ item.link }}" class="item-title" target="_blank">{{ item.title }}</a>
