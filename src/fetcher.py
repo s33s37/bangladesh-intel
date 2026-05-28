@@ -1,5 +1,6 @@
 """
 孟加拉商业情报日报 - 数据采集模块
+负责从所有配置源抓取过去24小时的新闻
 """
 
 import feedparser
@@ -8,10 +9,13 @@ from dateutil import parser as date_parser
 import time
 import hashlib
 
-from src.config import GENERAL_RSS, GOOGLE_ALERTS_RSS
+from src.config import GENERAL_RSS, GOOGLE_NEWS_RSS, GOOGLE_ALERTS_RSS
 
 
 def fetch_rss(url, source_name, hours=24):
+    """
+    抓取单个RSS源，只返回过去N小时内的条目
+    """
     entries = []
     try:
         feed = feedparser.parse(url, agent="BangladeshIntelBot/1.0")
@@ -50,8 +54,14 @@ def fetch_rss(url, source_name, hours=24):
 
 
 def fetch_all_sources(hours=24):
+    """
+    采集所有配置源的新闻
+    """
     all_entries = []
+    
+    # 合并所有源
     sources = GENERAL_RSS.copy()
+    sources.extend(GOOGLE_NEWS_RSS)
     
     for url in GOOGLE_ALERTS_RSS:
         if url and url.strip():
@@ -82,6 +92,9 @@ def fetch_all_sources(hours=24):
 
 
 def fetch_for_test():
+    """
+    测试模式：只抓前3个通用源
+    """
     print("[TEST MODE] Fetching first 3 sources...")
     entries = []
     for src in GENERAL_RSS[:3]:
