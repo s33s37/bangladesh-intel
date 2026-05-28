@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孟加拉商业情报日报 | {{ date }}</title>
+<style>
+  :root {
+    --bg: #f3f4f6;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --accent: #0ea5e9;
+    --red: #dc2626;
+    --green: #059669;
+    --amber: #d97706;
+    --blue: #2563eb;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding-bottom: 40px;
+  }
+  .container { max-width: 880px; margin: 0 auto; padding: 24px 16px; }
+  header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: #fff;
+    padding: 32px 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 25px rgba(30,58,138,0.2);
+  }
+  header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; }
+  header .subtitle { font-size: 13px; opacity: 0.85; margin-top: 6px; }
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-top: 3px solid var(--accent);
+  }
+  .stat-card:nth-child(2) { border-top-color: var(--red); }
+  .stat-card:nth-child(3) { border-top-color: var(--blue); }
+  .stat-card:nth-child(4) { border-top-color: var(--green); }
+  .stat-num { font-size: 24px; font-weight: 800; color: var(--text); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .section { margin-bottom: 24px; }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .alert-box {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 4px solid var(--red);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .alert-box .alert-head {
+    font-weight: 700;
+    color: var(--red);
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .policy-box {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-left: 4px solid var(--blue);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .policy-box .policy-head {
+    font-weight: 700;
+    color: var(--blue);
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sector-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .sector-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sector-name { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .sector-count {
+    background: var(--bg);
+    color: var(--muted);
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .item:last-child { border-bottom: none; padding-bottom: 0; }
+  .item:first-child { padding-top: 0; }
+  .item-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .item-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    flex: 1 1 auto;
+  }
+  .item-title:hover { color: var(--accent); text-decoration: underline; }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .tag-type { background: #e0f2fe; color: #0369a1; }
+  .tag-pos { background: #d1fae5; color: #065f46; }
+  .tag-neg { background: #fee2e2; color: #991b1b; }
+  .tag-neu { background: #f3f4f6; color: #4b5563; }
+  .tag-high { background: var(--red); color: #fff; }
+  .tag-mid { background: var(--amber); color: #fff; }
+  .tag-src {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .item-summary {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+  .item-meta {
+    font-size: 12px;
+    color: #9ca3af;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .top-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    margin-right: 4px;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  @media (max-width: 640px) {
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    header h1 { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<<header>
+  <h1>🇧🇩 孟加拉商业情报日报</h1>
+  <div class="subtitle">Bangladesh Business Intelligence Daily &nbsp;|&nbsp; {{ date }} &nbsp;|&nbsp; 第{{ issue_no }}期</div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-num">{{ total }}</div>
+    <div class="stat-label">今日采集条目</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--red)">{{ red_count }}</div>
+    <div class="stat-label">风险预警</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--blue)">{{ policy_count }}</div>
+    <div class="stat-label">政策变动</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" style="color:var(--green)">{{ positive_count }}</div>
+    <div class="stat-label">正面信号</div>
+  </div>
+</div>
+
+{% if red_flags %}
+<div class="section">
+  <div class="alert-box">
+    <div class="alert-head">🚨 今日风险预警（需关注）</div>
+    {% for r in red_flags %}
+    <div class="item" style="padding:8px 0;">
+      <div class="item-header">
+        <span class="tag tag-high">{{ r.importance }}</span>
+        <span class="tag tag-neg">{{ r.impact_cn }}</span>
+        <span class="tag tag-type">{{ r.intel_type }}</span>
+      </div>
+      <div class="item-summary">
+        <strong>[{{ r.sector }}]</strong> {{ r.summary_cn }}
+      </div>
+      <div class="item-meta">实体: {{ r.entities|join(', ') }} | 来源: {{ r.source }} | 依据: {{ r.reason }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if policy_radar %}
+<div class="section">
+  <div class="policy-box">
+    <div class="policy-head">📜 政策雷达（近24小时官方动作）</div>
+    {% for p in policy_radar %}
+    <div class="item" style="padding:8px 0;">
+      <div class="item-header">
+        <span class="tag tag-type">{{ p.intel_type }}</span>
+        <span class="tag {% if p.impact_cn == '正面' %}tag-pos{% elif p.impact_cn == '负面' %}tag-neg{% else %}tag-neu{% endif %}">{{ p.impact_cn }}</span>
+        <span class="tag tag-src">{{ p.source }}</span>
+      </div>
+      <div class="item-summary">
+        <strong>[{{ p.sector }}]</strong> {{ p.summary_cn }}
+      </div>
+      <div class="item-meta">实体: {{ p.entities|join(', ') }} | 依据: {{ p.reason }} | 时间: {{ p.pub_date }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% for sec in sector_list %}
+<div class="sector-card">
+  <div class="sector-header">
+    <div class="sector-name">{{ sec }}</div>
+    <div class="sector-count">{{ sectors[sec]|length }} 条</div>
+  </div>
+  {% for item in sectors[sec][:8] %}
+  <div class="item {% if item.importance == '高' %}tag-high{% endif %}">
+    <div class="item-header">
+      {% if item.importance == '高' %}<<span class="top-badge">TOP</span>{% endif %}
+      <a href="{{ item.link }}" class="item-title" target="_blank">{{ item.title }}</a>
+    </div>
+    <div>
+      <span class="tag tag-type">{{ item.intel_type }}</span>
+      {% if item.impact_cn == '正面' %}<<span class="tag tag-pos">正面</span>
+      {% elif item.impact_cn == '负面' %}<<span class="tag tag-neg">负面</span>
+      {% else %}<<span class="tag tag-neu">{{ item.impact_cn }}</span>{% endif %}
+      <span class="tag tag-src">{{ item.source }}</span>
+    </div>
+    <div class="item-summary">{{ item.summary_cn }}</div>
+    <div class="item-meta">
+      实体：{{ item.entities|join(', ') }} | 依据：{{ item.reason }} | {{ item.pub_date }}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %}
+
+<<footer>
+  <div>🇧🇩 孟加拉商业情报日报 &nbsp;|&nbsp; 自动生成于 {{ date }} CST</div>
+  <div style="margin-top:6px;">模型: {{ model_name }} via 阿里云百炼 &nbsp;|&nbsp; 采集源: RSS/官方公告/媒体 &nbsp;|&nbsp; 仅供研究参考</div>
+</footer>
+
+</div>
+</body>
+</html>
