@@ -9,11 +9,11 @@ import os
 import time
 from datetime import datetime
 
-# GitHub Actions 运行时当前目录是仓库根目录
-# 直接导入同级模块（不带 src. 前缀）
-from fetcher import fetch_all_sources, fetch_for_test
-from processor import batch_analyze, get_top_signals
-from generator import generate_html
+# GitHub Actions 从仓库根目录运行：python -m src.main
+# 所以这里用 src. 前缀导入
+from src.fetcher import fetch_all_sources, fetch_for_test
+from src.processor import batch_analyze, get_top_signals
+from src.generator import generate_html
 
 
 def run_daily(test_mode=False):
