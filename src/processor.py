@@ -10,8 +10,18 @@ from src.config import SECTORS, TYPES, RED_FLAG_KEYWORDS, SECTOR_KEYWORDS
 
 
 # 初始化阿里云百炼客户端（OpenAI兼容模式）
+# 优先从环境变量读取，其次从本地配置文件（本地调试用）
+api_key = os.environ.get("DASHSCOPE_API_KEY", "")
+if not api_key:
+    # 本地调试 fallback
+    try:
+        with open(os.path.expanduser("~/.dashscope_key"), "r") as f:
+            api_key = f.read().strip()
+    except:
+        pass
+
 client = OpenAI(
-    api_key=os.environ.get("DASHSCOPE_API_KEY"),
+    api_key=api_key,
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
 )
 
