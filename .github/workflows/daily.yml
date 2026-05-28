@@ -35,10 +35,10 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-                 # Step 4: 运行主程序（正式模式）
+      # Step 4: 运行主程序（正式模式）
       - name: Run Intel Engine
         env:
-          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
           echo "Starting Bangladesh Intel Daily..."
           python -m src.main
