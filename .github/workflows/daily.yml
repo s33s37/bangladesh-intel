@@ -35,13 +35,13 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-            # Step 4: 运行主程序（正式模式）
+                 # Step 4: 运行主程序（正式模式）
       - name: Run Intel Engine
         env:
           DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
         run: |
           echo "Starting Bangladesh Intel Daily..."
-          cd src && python main.py
+          python -m src.main
           echo "Report generation complete"
 
       # Step 5: 部署到 GitHub Pages
