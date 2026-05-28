@@ -11,15 +11,15 @@
     --text: #1f2937;
     --muted: #6b7280;
     --accent: #0ea5e9;
-    --red: #be123c;          /* 降饱和深玫瑰红，仅用于边线/小徽章 */
-    --red-light: #fff1f2;    /* 极浅粉背景 */
-    --red-soft: #fee2e2;     /* 负面标签浅红底 */
-    --red-text: #991b1b;     /* 负面标签深红字 */
+    --red: #be123c;
+    --red-light: #fff1f2;
+    --red-soft: #fee2e2;
+    --red-text: #991b1b;
     --green: #059669;
     --amber: #d97706;
     --blue: #2563eb;
     --border: #e5e7eb;
-    --rose-border: #fecdd3;  /* 柔和玫瑰边框 */
+    --rose-border: #fecdd3;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -201,7 +201,6 @@
     margin-right: 4px;
   }
 
-  /* === 高重要性条目：左边线 + 淡粉背景，取代全红背景 === */
   .item.item-high {
     background: var(--red-light);
     border: 1px solid var(--rose-border);
@@ -237,19 +236,19 @@
 
 <div class="stats-bar">
   <div class="stat-card">
-    <div class="stat-num">497</div>
+    <div class="stat-num">513</div>
     <div class="stat-label">今日采集条目</div>
   </div>
   <div class="stat-card">
-    <div class="stat-num" style="color:var(--red)">157</div>
+    <div class="stat-num" style="color:var(--red)">165</div>
     <div class="stat-label">风险预警</div>
   </div>
   <div class="stat-card">
-    <div class="stat-num" style="color:var(--blue)">37</div>
+    <div class="stat-num" style="color:var(--blue)">41</div>
     <div class="stat-label">政策变动</div>
   </div>
   <div class="stat-card">
-    <div class="stat-num" style="color:var(--green)">11</div>
+    <div class="stat-num" style="color:var(--green)">14</div>
     <div class="stat-label">正面信号</div>
   </div>
 </div>
@@ -261,26 +260,14 @@
     
     <div class="item" style="padding:8px 0;">
       <div class="item-header">
-        <span class="tag tag-high">中</span>
+        <span class="tag tag-high">低</span>
         <span class="tag tag-neg">负面</span>
         <span class="tag tag-type">风险事件</span>
       </div>
       <div class="item-summary">
-        <strong>[其他]</strong> 孟加拉国7个地区发布夜间风暴预警，可能影响物流与生产。
+        <strong>[其他]</strong> 库米拉两名假币贩被捕
       </div>
-      <div class="item-meta">实体:  | 来源: BD Pratidin | 依据: 自然灾害预警，可能中断供应链</div>
-    </div>
-    
-    <div class="item" style="padding:8px 0;">
-      <div class="item-header">
-        <span class="tag tag-high">中</span>
-        <span class="tag tag-neg">负面</span>
-        <span class="tag tag-type">风险事件</span>
-      </div>
-      <div class="item-summary">
-        <strong>[基建]</strong> 班多尔班市因缺乏协调和规划，基础设施问题严重，垃圾倾倒入河流。
-      </div>
-      <div class="item-meta">实体: বান্দরবান পৌরসভা, সাঙ্গু নদী | 来源: Jagonews24 | 依据: 基础设施管理混乱，环境风险</div>
+      <div class="item-meta">实体:  | 来源: BD Pratidin | 依据: 假币犯罪，非商业情报</div>
     </div>
     
     <div class="item" style="padding:8px 0;">
@@ -290,33 +277,45 @@
         <span class="tag tag-type">风险事件</span>
       </div>
       <div class="item-summary">
-        <strong>[其他]</strong> 孟加拉发生摩托车相撞事故致1人死亡
+        <strong>[其他]</strong> 孟加拉国一乘客从行驶中巴士摔落身亡，事故涉及刹车失灵。
+      </div>
+      <div class="item-meta">实体: সাত্তার হাওলাদার, প্রচেষ্টা পরিবহন, শিবচর হাইওয়ে পুলিশ, মো. মিজানুর রহমান | 来源: Jagonews24 | 依据: 交通事故致人死亡</div>
+    </div>
+    
+    <div class="item" style="padding:8px 0;">
+      <div class="item-header">
+        <span class="tag tag-high">中</span>
+        <span class="tag tag-neg">负面</span>
+        <span class="tag tag-type">风险事件</span>
+      </div>
+      <div class="item-summary">
+        <strong>[其他]</strong> 中东停火协议被指遭破坏，局势再度紧张。
+      </div>
+      <div class="item-meta">实体: মোজতবা খামেনি | 来源: BD Pratidin | 依据: 涉及停火协议破坏，地缘风险</div>
+    </div>
+    
+    <div class="item" style="padding:8px 0;">
+      <div class="item-header">
+        <span class="tag tag-high">低</span>
+        <span class="tag tag-neg">负面</span>
+        <span class="tag tag-type">风险事件</span>
+      </div>
+      <div class="item-summary">
+        <strong>[其他]</strong> 孟加拉国返乡旅客遭遇交通拥堵和票价上涨，出行困难。
+      </div>
+      <div class="item-meta">实体:  | 来源: Dhaka Tribune | 依据: 涉及交通拥堵和票价上涨</div>
+    </div>
+    
+    <div class="item" style="padding:8px 0;">
+      <div class="item-header">
+        <span class="tag tag-high">低</span>
+        <span class="tag tag-neg">负面</span>
+        <span class="tag tag-type">风险事件</span>
+      </div>
+      <div class="item-summary">
+        <strong>[其他]</strong> 两人骑摩托车出行发生事故，一人死亡。
       </div>
       <div class="item-meta">实体:  | 来源: BD Pratidin | 依据: 交通事故，无商业关联</div>
-    </div>
-    
-    <div class="item" style="padding:8px 0;">
-      <div class="item-header">
-        <span class="tag tag-high">低</span>
-        <span class="tag tag-neg">负面</span>
-        <span class="tag tag-type">风险事件</span>
-      </div>
-      <div class="item-summary">
-        <strong>[其他]</strong> 美国在加勒比地区军事活动加剧，围绕古巴的紧张局势升级。
-      </div>
-      <div class="item-meta">实体: 美国, 古巴 | 来源: BD Pratidin | 依据: 军事紧张局势可能影响区域稳定</div>
-    </div>
-    
-    <div class="item" style="padding:8px 0;">
-      <div class="item-header">
-        <span class="tag tag-high">中</span>
-        <span class="tag tag-neg">负面</span>
-        <span class="tag tag-type">市场数据</span>
-      </div>
-      <div class="item-summary">
-        <strong>[其他]</strong> 英国16-24岁失业失学青年超百万，面临失去的一代风险。
-      </div>
-      <div class="item-meta">实体: 艾伦·米尔本, 莎娜·法塔利, 费斯 | 来源: Jagonews24 | 依据: 青年失业率上升，消费市场萎缩</div>
     </div>
     
   </div>
@@ -331,13 +330,37 @@
     <div class="item" style="padding:8px 0;">
       <div class="item-header">
         <span class="tag tag-type">政策变动</span>
+        <span class="tag tag-pos">正面</span>
+        <span class="tag tag-src">Jagonews24</span>
+      </div>
+      <div class="item-summary">
+        <strong>[皮革]</strong> 孟加拉商务部长称今年皮革走私可能性低，大部分将保存并运至制革厂。
+      </div>
+      <div class="item-meta">实体: খন্দকার আব্দুল মুক্তাদির, বাণিজ্যমন্ত্রী, সাভারের বিসিক চামড়া শিল্পনগরী | 依据: 皮革供应链稳定，减少非法流出 | 时间: 05-28 21:39</div>
+    </div>
+    
+    <div class="item" style="padding:8px 0;">
+      <div class="item-header">
+        <span class="tag tag-type">政策变动</span>
+        <span class="tag tag-pos">正面</span>
+        <span class="tag tag-src">Dhaka Tribune</span>
+      </div>
+      <div class="item-summary">
+        <strong>[皮革]</strong> 孟加拉部长称今年无走私动物皮，呼吁增加高附加值皮革出口。
+      </div>
+      <div class="item-meta">实体: Khandakar Abdul Muktadir | 依据: 打击走私，利好正规皮革产业 | 时间: 05-28 21:38</div>
+    </div>
+    
+    <div class="item" style="padding:8px 0;">
+      <div class="item-header">
+        <span class="tag tag-type">政策变动</span>
         <span class="tag tag-neu">中性</span>
         <span class="tag tag-src">BD Pratidin</span>
       </div>
       <div class="item-summary">
         <strong>[皮革]</strong> 孟商务部长称政府正确保宰牲节皮革妥善管理
       </div>
-      <div class="item-meta">实体: 孟加拉国政府, 商务部长 | 依据: 常规政策表态，无具体措施 | 时间: 05-28 20:31</div>
+      <div class="item-meta">实体: 政府, 商务部长 | 依据: 政策表态，无具体措施 | 时间: 05-28 20:31</div>
     </div>
     
     <div class="item" style="padding:8px 0;">
@@ -347,9 +370,9 @@
         <span class="tag tag-src">Dhaka Tribune</span>
       </div>
       <div class="item-summary">
-        <strong>[其他]</strong> 孟财政部长称政府正努力控制物价、强化经济，迈向福利国家。
+        <strong>[其他]</strong> 孟财政部长称政府正控制物价、强化经济，建设福利国家。
       </div>
-      <div class="item-meta">实体: Finance Minister | 依据: 宏观政策声明，无具体商业影响 | 时间: 05-28 20:15</div>
+      <div class="item-meta">实体: Finance Minister | 依据: 政策方向性声明，无具体措施 | 时间: 05-28 20:15</div>
     </div>
     
     <div class="item" style="padding:8px 0;">
@@ -379,49 +402,25 @@
     <div class="item" style="padding:8px 0;">
       <div class="item-header">
         <span class="tag tag-type">政策变动</span>
-        <span class="tag tag-neg">负面</span>
-        <span class="tag tag-src">Google News - Bangladesh</span>
-      </div>
-      <div class="item-summary">
-        <strong>[基建]</strong> 印度内政部长称边境围栏建设是优先事项，影响孟加拉国边境基建合作。
-      </div>
-      <div class="item-meta">实体: 印度, 孟加拉国, Amit Shah | 依据: 涉及边境围栏，可能影响双边关系与基建项目 | 时间: 05-28 14:38</div>
-    </div>
-    
-    <div class="item" style="padding:8px 0;">
-      <div class="item-header">
-        <span class="tag tag-type">政策变动</span>
-        <span class="tag tag-pos">正面</span>
-        <span class="tag tag-src">Google News - Bangladesh Solar</span>
-      </div>
-      <div class="item-summary">
-        <strong>[能源]</strong> 孟加拉国总理表示国家正稳步迈向能源自给自足。
-      </div>
-      <div class="item-meta">实体: Bangladesh PM | 依据: 政策方向利好能源投资 | 时间: 05-28 13:22</div>
-    </div>
-    
-    <div class="item" style="padding:8px 0;">
-      <div class="item-header">
-        <span class="tag tag-type">政策变动</span>
         <span class="tag tag-neu">待观察</span>
         <span class="tag tag-src">Google News - Bangladesh</span>
       </div>
       <div class="item-summary">
-        <strong>[其他]</strong> 孟加拉国与巴基斯坦接触，印度保持警惕，可能影响区域地缘政治格局。
+        <strong>[基建]</strong> 印度内政部长称边境围栏是优先事项，影响孟加拉国边境基建合作。
       </div>
-      <div class="item-meta">实体: 印度, 孟加拉国, 巴基斯坦 | 依据: 地缘政治变动，需关注后续 | 时间: 05-28 12:13</div>
+      <div class="item-meta">实体: 印度, 孟加拉国, Amit Shah | 依据: 边境基建政策变动，需关注后续影响 | 时间: 05-28 14:38</div>
     </div>
     
     <div class="item" style="padding:8px 0;">
       <div class="item-header">
         <span class="tag tag-type">政策变动</span>
         <span class="tag tag-neu">中性</span>
-        <span class="tag tag-src">BD Pratidin</span>
+        <span class="tag tag-src">Prothom Alo English</span>
       </div>
       <div class="item-summary">
-        <strong>[能源]</strong> 孟加拉国电力副部长称无计划停电空间
+        <strong>[皮革]</strong> 孟加拉商务部长视察阿明巴扎尔宰牲节皮革管理情况。
       </div>
-      <div class="item-meta">实体: 电力部副部长 | 依据: 官方表态，无具体行动 | 时间: 05-28 11:47</div>
+      <div class="item-meta">实体: বাণিজ্যমন্ত্রী, আমিনবাজার | 依据: 常规视察，无具体政策或商业影响 | 时间: 05-28 14:12</div>
     </div>
     
   </div>
@@ -432,10 +431,9 @@
 <div class="sector-card">
   <div class="sector-header">
     <div class="sector-name">成衣纺织</div>
-    <div class="sector-count">7 条</div>
+    <div class="sector-count">8 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -447,13 +445,12 @@
       
       <span class="tag tag-src">The Daily Star - Business</span>
     </div>
-    <div class="item-summary">孟加拉国时尚鞋类零售商因通胀导致开斋节销售疲软</div>
+    <div class="item-summary">孟加拉国时尚鞋服零售商因通胀导致开斋节销售疲软</div>
     <div class="item-meta">
-      实体： | 依据：通胀削弱消费力，销售疲软 | 05-28 16:36
+      实体： | 依据：消费疲软影响成衣纺织业 | 05-28 16:36
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -467,11 +464,26 @@
     </div>
     <div class="item-summary">孟加拉国成衣出口至美国在7月至3月期间下降2.54%</div>
     <div class="item-meta">
-      实体：The Daily Star | 依据：出口下降显示需求疲软 | 05-27 08:16
+      实体：The Daily Star | 依据：出口下降，可能影响供应链 | 05-27 08:16
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
+  <div class="item ">
+    <div class="item-header">
+      
+      <a href="https://news.google.com/rss/articles/CBMitAFBVV95cUxOTVhrS213djQ1dXBaZzVYQWcwNGNxb0R6TkNRc09qUUhkVkFJaHFLNkJsWW5DVmg0Y05DeC1iVmN2Vk8zNDI0MzM2aWRPcHlpQXhJbHl0SVkzZFcwZXJ4akZwVHl2ZUw3c29hRXVYSGszWEUtdUU1MzZtVVJQS2hKSWM4OVpTbm1MODlzQXRxRENzNzgwQWYzbmJrMkcxWHdpOHZhSmoxNzdZenFTdnJINFdXSXI?oc=5" class="item-title" target="_blank">Bangladesh vs Vietnam: The new competitive landscape of the global apparel industry - Textile Today</a>
+    </div>
+    <div>
+      <span class="tag tag-type">市场数据</span>
+      <<span class="tag tag-neu">待观察</span>
+      <span class="tag tag-src">Google News - Bangladesh Textile</span>
+    </div>
+    <div class="item-summary">孟加拉国与越南在全球服装产业中的竞争格局分析</div>
+    <div class="item-meta">
+      实体：Bangladesh, Vietnam | 依据：竞争格局分析，无具体事件 | 05-26 21:14
+    </div>
+  </div>
+  
   <div class="item ">
     <div class="item-header">
       
@@ -483,13 +495,12 @@
       
       <span class="tag tag-src">Dhaka Tribune</span>
     </div>
-    <div class="item-summary">Chaity Garments工人因欠薪堵路致达卡-吉大港高速8公里拥堵</div>
+    <div class="item-summary">成衣工人堵路抗议欠薪，致达卡-吉大港高速8公里拥堵</div>
     <div class="item-meta">
       实体：Chaity Garments | 依据：工人罢工堵路，供应链中断风险 | 05-26 20:07
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -501,13 +512,12 @@
       
       <span class="tag tag-src">Google News - Bangladesh RMG</span>
     </div>
-    <div class="item-summary">孟加拉国成衣在欧盟市场份额持续下降</div>
+    <div class="item-summary">孟加拉国成衣在欧盟市场份额下降</div>
     <div class="item-meta">
-      实体：孟加拉国成衣业, 欧盟 | 依据：市场份额萎缩，出口竞争力下降 | 05-26 10:03
+      实体：Dhaka Tribune | 依据：市场份额萎缩，出口竞争力下降 | 05-26 10:03
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -518,13 +528,12 @@
       <<span class="tag tag-neu">中性</span>
       <span class="tag tag-src">BD Pratidin</span>
     </div>
-    <div class="item-summary">孟加拉服装设计师Mariara计划在开斋节推出红绿主题服装系列。</div>
+    <div class="item-summary">孟加拉服装设计师Mariara计划在开斋节推出红绿主题服装。</div>
     <div class="item-meta">
-      实体： | 依据：无具体商业影响 | 05-28 17:11
+      实体： | 依据：节日促销，无商业影响 | 05-28 17:11
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -535,13 +544,12 @@
       <<span class="tag tag-neu">中性</span>
       <span class="tag tag-src">Google News - Bangladesh</span>
     </div>
-    <div class="item-summary">Drip by Drip项目关注孟加拉国服装厂经期健康缺口。</div>
+    <div class="item-summary">Drip by Drip项目关注孟加拉国服装工厂的经期健康缺口。</div>
     <div class="item-meta">
-      实体：Drip by Drip | 依据：非商业事件，社会议题 | 05-28 10:53
+      实体：Drip by Drip, Fashion United | 依据：非商业事件，社会议题 | 05-28 10:53
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -552,7 +560,7 @@
       <<span class="tag tag-neu">中性</span>
       <span class="tag tag-src">Dhaka Tribune</span>
     </div>
-    <div class="item-summary">达卡萨瓦-阿舒利亚工业区工人因开斋节返乡，出现客流高峰。</div>
+    <div class="item-summary">达卡萨瓦尔-阿舒利亚工业区工人因开斋节返乡，导致交通拥堵。</div>
     <div class="item-meta">
       实体： | 依据：季节性事件，无直接商业影响 | 05-26 20:02
     </div>
@@ -566,25 +574,6 @@
     <div class="sector-count">19 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item item-high">
-    <div class="item-header">
-      <<span class="top-badge">TOP</span>
-      <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxPaEFkV08tbHZ2TmNuOFFESDFjWThCU1dXTzR0QTdNUDJPbzR2VlZfT0Jzb0d0Q19aMzVaRnBWcUhJQlhGVmo5dUF5UmM5eGZqY1QxU0J3T2RmaTFMcjZxZlJxTEhPdjZrb2hOSU12U2lYaWZvT3ZGd2RsTEJVX2V3UWZuUkRMQUtlLUhMSExka2VzRVJYbHdSdDdyZEJuc3N4UWs0?oc=5" class="item-title" target="_blank">Address the rot in our infrastructure sector - The Daily Star</a>
-    </div>
-    <div>
-      <span class="tag tag-type">风险事件</span>
-      <<span class="tag tag-neg">负面</span>
-      
-      <span class="tag tag-src">Google News - Bangladesh Infrastructure</span>
-    </div>
-    <div class="item-summary">孟加拉国基建行业存在严重腐败问题，需紧急整改。</div>
-    <div class="item-meta">
-      实体：The Daily Star | 依据：涉及腐败风险，影响投资环境 | 05-28 11:10
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -594,15 +583,14 @@
       <span class="tag tag-type">投融资</span>
       <<span class="tag tag-pos">正面</span>
       
-      <span class="tag tag-src">Google News - Bangladesh Infrastructure</span>
+      <span class="tag tag-src">Google News - Bangladesh Investment</span>
     </div>
     <div class="item-summary">亚行宣布50亿美元支持计划，助力孟加拉国经济稳定与增长。</div>
     <div class="item-meta">
-      实体：ADB, Bangladesh | 依据：大规模资金支持基建，利好中企参与 | 05-26 17:00
+      实体：ADB, Bangladesh | 依据：大规模资金支持，利好基建 | 05-26 17:00
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -620,7 +608,6 @@
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -634,11 +621,10 @@
     </div>
     <div class="item-summary">亚行准备885万亿印尼盾（约合57亿美元）资金支持孟加拉国应对经济压力。</div>
     <div class="item-meta">
-      实体：ADB, Bangladesh | 依据：大规模融资利好基建项目 | 05-26 08:26
+      实体：ADB, Bangladesh | 依据：大规模资金注入利好基建项目 | 05-26 08:26
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -656,7 +642,6 @@
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -674,7 +659,6 @@
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -686,13 +670,12 @@
       
       <span class="tag tag-src">Jagonews24</span>
     </div>
-    <div class="item-summary">班多尔班市因缺乏协调和规划，基础设施问题严重，垃圾倾倒入河流。</div>
+    <div class="item-summary">班多尔班市因缺乏协调和规划，基础设施问题严重，影响居民生活。</div>
     <div class="item-meta">
-      实体：বান্দরবান পৌরসভা, সাঙ্গু নদী | 依据：基础设施管理混乱，环境风险 | 05-28 20:49
+      实体：বান্দরবান পৌরসভা | 依据：基础设施管理混乱，存在风险 | 05-28 20:49
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -700,13 +683,29 @@
     </div>
     <div>
       <span class="tag tag-type">政策变动</span>
-      <<span class="tag tag-neg">负面</span>
-      
+      <<span class="tag tag-neu">待观察</span>
       <span class="tag tag-src">Google News - Bangladesh</span>
     </div>
-    <div class="item-summary">印度内政部长称边境围栏建设是优先事项，影响孟加拉国边境基建合作。</div>
+    <div class="item-summary">印度内政部长称边境围栏是优先事项，影响孟加拉国边境基建合作。</div>
     <div class="item-meta">
-      实体：印度, 孟加拉国, Amit Shah | 依据：涉及边境围栏，可能影响双边关系与基建项目 | 05-28 14:38
+      实体：印度, 孟加拉国, Amit Shah | 依据：边境基建政策变动，需关注后续影响 | 05-28 14:38
+    </div>
+  </div>
+  
+  <div class="item ">
+    <div class="item-header">
+      
+      <a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxPaEFkV08tbHZ2TmNuOFFESDFjWThCU1dXTzR0QTdNUDJPbzR2VlZfT0Jzb0d0Q19aMzVaRnBWcUhJQlhGVmo5dUF5UmM5eGZqY1QxU0J3T2RmaTFMcjZxZlJxTEhPdjZrb2hOSU12U2lYaWZvT3ZGd2RsTEJVX2V3UWZuUkRMQUtlLUhMSExka2VzRVJYbHdSdDdyZEJuc3N4UWs0?oc=5" class="item-title" target="_blank">Address the rot in our infrastructure sector - The Daily Star</a>
+    </div>
+    <div>
+      <span class="tag tag-type">风险事件</span>
+      <<span class="tag tag-neg">负面</span>
+      
+      <span class="tag tag-src">Google News - Bangladesh Infrastructure</span>
+    </div>
+    <div class="item-summary">孟加拉国基建行业存在严重腐败问题，需紧急整治。</div>
+    <div class="item-meta">
+      实体：The Daily Star | 依据：新闻标题指出基建行业腐败 | 05-28 11:10
     </div>
   </div>
   
@@ -715,28 +714,9 @@
 <div class="sector-card">
   <div class="sector-header">
     <div class="sector-name">能源</div>
-    <div class="sector-count">17 条</div>
+    <div class="sector-count">18 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item item-high">
-    <div class="item-header">
-      <<span class="top-badge">TOP</span>
-      <a href="https://www.bd-pratidin.com/international-news/2026/05/28/1256275" class="item-title" target="_blank">হরমুজ সংকট দীর্ঘ হলে ইউরোপে জেট ফুয়েল সংকটের শঙ্কা</a>
-    </div>
-    <div>
-      <span class="tag tag-type">风险事件</span>
-      <<span class="tag tag-neg">负面</span>
-      
-      <span class="tag tag-src">BD Pratidin</span>
-    </div>
-    <div class="item-summary">霍尔木兹危机若持续，欧洲可能面临航空燃油短缺</div>
-    <div class="item-meta">
-      实体： | 依据：地缘政治风险影响能源供应 | 05-28 17:32
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -750,11 +730,10 @@
     </div>
     <div class="item-summary">伊朗向试图穿越霍尔木兹海峡的美国油轮开火驱离</div>
     <div class="item-meta">
-      实体：ইরান, মার্কিন তেলবাহী ট্যাংকার | 依据：地缘冲突升级，威胁能源运输安全 | 05-28 13:03
+      实体：ইরান, মার্কিন তেলবাহী ট্যাংকার | 依据：地缘冲突升级，威胁能源运输 | 05-28 13:03
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -768,11 +747,10 @@
     </div>
     <div class="item-summary">吉大港外锚地油轮起火，影响能源运输安全。</div>
     <div class="item-meta">
-      实体：চট্টগ্রাম বন্দর | 依据：火灾事故导致港口运营中断 | 05-28 12:22
+      实体：চট্টগ্রাম বন্দর | 依据：火灾事故导致供应链中断风险 | 05-28 12:22
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -784,13 +762,12 @@
       
       <span class="tag tag-src">BD Pratidin</span>
     </div>
-    <div class="item-summary">美国袭击伊朗导致全球油价大幅上涨</div>
+    <div class="item-summary">美国袭击伊朗导致全球油价大幅上涨。</div>
     <div class="item-meta">
       实体：伊朗, 美国 | 依据：地缘冲突推高油价 | 05-28 12:04
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -802,13 +779,12 @@
       
       <span class="tag tag-src">The Daily Star - Business</span>
     </div>
-    <div class="item-summary">美国对伊朗新打击后，布伦特原油涨近2%至96.13美元/桶</div>
+    <div class="item-summary">美国对伊朗新打击后，布伦特原油涨近2%至96.13美元/桶。</div>
     <div class="item-meta">
       实体：美国, 伊朗 | 依据：地缘冲突推高油价，增加进口成本 | 05-28 08:28
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -826,25 +802,40 @@
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
-      <a href="https://www.jagonews24.com/national/news/1123032" class="item-title" target="_blank">চট্টগ্রাম বন্দরের বহির্নোঙরে তেলবাহী জাহাজে আগুন, ২২ নাবিক উদ্ধার</a>
+      <a href="https://www.bd-pratidin.com/international-news/2026/05/28/1256275" class="item-title" target="_blank">হরমুজ সংকট দীর্ঘ হলে ইউরোপে জেট ফুয়েল সংকটের শঙ্কা</a>
     </div>
     <div>
       <span class="tag tag-type">风险事件</span>
       <<span class="tag tag-neg">负面</span>
       
-      <span class="tag tag-src">Jagonews24</span>
+      <span class="tag tag-src">BD Pratidin</span>
     </div>
-    <div class="item-summary">吉大港外锚地油轮起火，22名船员获救，火势已控制。</div>
+    <div class="item-summary">霍尔木兹危机若持续，欧洲可能面临航空燃油短缺</div>
     <div class="item-meta">
-      实体：MT Meghna Trader, Bangladesh Coast Guard, Bangladesh Navy, Chattogram Port Authority, Shyamal Bangla, BCGT Promotto, Kandari-3, Kandari-11 | 依据：油轮火灾事故，存在安全风险 | 05-28 16:39
+      实体： | 依据：涉及地缘政治风险与能源供应 | 05-28 17:32
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
+  <div class="item ">
+    <div class="item-header">
+      
+      <a href="https://news.google.com/rss/articles/CBMikAFBVV95cUxPU25WaWtVdlFzWTNEQldrWWEtdDU3eU96YWhqb3lwbWx2N2E0UlFLOVV5MklzX2IycjRLNGp1bUdHcERycDZmVzZwblJSX1N3Mm5lbXVMdk56eWVoakQ2bW5LVjcteHJlMzdWMkFNYks3d1dtV2E3OUtfVDB6WDdDZVV5U3VoNHNYbFZBTDl0YzM?oc=5" class="item-title" target="_blank">Tropical cyclones threaten Bangladesh’s energy security - National Centre for Atmospheric Science</a>
+    </div>
+    <div>
+      <span class="tag tag-type">风险事件</span>
+      <<span class="tag tag-neg">负面</span>
+      
+      <span class="tag tag-src">Google News - Bangladesh</span>
+    </div>
+    <div class="item-summary">热带气旋威胁孟加拉国能源安全</div>
+    <div class="item-meta">
+      实体：National Centre for Atmospheric Science | 依据：自然灾害威胁能源基础设施 | 05-28 15:08
+    </div>
+  </div>
+  
   <div class="item ">
     <div class="item-header">
       
@@ -856,9 +847,9 @@
       
       <span class="tag tag-src">Google News - Bangladesh Solar</span>
     </div>
-    <div class="item-summary">孟加拉国总理表示国家正稳步迈向能源自给自足。</div>
+    <div class="item-summary">孟加拉国总理表示正稳步迈向能源自给自足系统。</div>
     <div class="item-meta">
-      实体：Bangladesh PM | 依据：政策方向利好能源投资 | 05-28 13:22
+      实体：Bangladesh PM | 依据：能源自给政策利好投资 | 05-28 13:22
     </div>
   </div>
   
@@ -870,7 +861,6 @@
     <div class="sector-count">2 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -884,11 +874,10 @@
     </div>
     <div class="item-summary">孟加拉国对太阳能零部件征收高额进口关税，阻碍绿色能源转型。</div>
     <div class="item-meta">
-      实体：The Daily Star | 依据：高关税增加成本，影响中国企业出口 | 05-28 02:34
+      实体：The Daily Star | 依据：高关税增加成本，影响中国企业出口太阳能组件。 | 05-28 02:34
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -914,7 +903,6 @@
     <div class="sector-count">1 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -939,7 +927,6 @@
     <div class="sector-count">2 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -952,24 +939,48 @@
     </div>
     <div class="item-summary">孟加拉国首批本土制造电动汽车将于7月上路。</div>
     <div class="item-meta">
-      实体：The Business Standard | 依据：本土EV量产，市场新动向 | 05-28 11:28
+      实体： | 依据：本土EV量产，市场新动向 | 05-28 11:28
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
-      <a href="https://news.google.com/rss/articles/CBMiuAFBVV95cUxNVVpqNjMtZVllUmZ5QXAtc09iLVAzeVA5VWp6QlVNUlpNOW96aHJrNXdTYktOT3BOMHRPeDliOU4xUzVGRVZTOWdFUUY2VjUtdVlfclFFV3lTTVFGdW1iN1NvSTVfOTRacjdfZmlJMi1MN1M0RmhxRGpUVGVwZVQzLUJjNWNseC0xTF9ieDhtUlRVMTZvSW83RkZGcVUzbGFtNThUMk9GcGhxbWNodlRxX095dER3NFNP?oc=5" class="item-title" target="_blank">Electric Vehicle: Technical Advantages, Energy Math and Bangladesh's Readiness - daily-sun.com</a>
+      <a href="https://www.prothomalo.com/video/international/m3dnmkvkub" class="item-title" target="_blank">পোপের হাতে ফেরারির প্রথম ইলেকট্রিক গাড়ির স্টিয়ারিং</a>
     </div>
     <div>
-      <span class="tag tag-type">市场数据</span>
-      <<span class="tag tag-neu">待观察</span>
-      <span class="tag tag-src">Google News - Bangladesh EV</span>
+      <span class="tag tag-type">其他</span>
+      <<span class="tag tag-neu">中性</span>
+      <span class="tag tag-src">Prothom Alo English</span>
     </div>
-    <div class="item-summary">孟加拉国评估电动汽车技术优势与能源匹配，探讨产业准备度。</div>
+    <div class="item-summary">法拉利推出首款全电动汽车</div>
     <div class="item-meta">
-      实体： | 依据：分析性文章，无具体事件 | 05-25 15:12
+      实体：Ferrari | 依据：非孟加拉国本地事件 | 05-28 15:13
+    </div>
+  </div>
+  
+</div>
+
+<div class="sector-card">
+  <div class="sector-header">
+    <div class="sector-name">制药</div>
+    <div class="sector-count">1 条</div>
+  </div>
+  
+  <div class="item ">
+    <div class="item-header">
+      
+      <a href="https://news.google.com/rss/articles/CBMipgFBVV95cUxNYldmN054LW5WQ1Z5MmdfUk9pSFUwTm51UWIwcTFXMGk2R3BYVm9PY2prWE5tMC1EZDZYUkFnbWFhRWtPVVNfLXhZNUVJYUtRc01WZVN2aEFObXFocWFJS2U1OXNhdmhKc1doek1kbHM5bjRRemFGaXo4M3ZKelBfUE9MVkxwMmExRXRiR0k3Q3VvUU84MWVUZ08taktBSnZHN2I3Uy1B?oc=5" class="item-title" target="_blank">Bangladesh Measles Surge Kills 500+ Children; Vaccine Delays Blamed - HealthDay</a>
+    </div>
+    <div>
+      <span class="tag tag-type">风险事件</span>
+      <<span class="tag tag-neg">负面</span>
+      
+      <span class="tag tag-src">Google News - Bangladesh</span>
+    </div>
+    <div class="item-summary">孟加拉国麻疹疫情导致500多名儿童死亡，疫苗延迟是主因。</div>
+    <div class="item-meta">
+      实体： | 依据：疫情爆发，疫苗供应问题 | 05-28 15:49
     </div>
   </div>
   
@@ -981,7 +992,6 @@
     <div class="sector-count">1 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -992,9 +1002,9 @@
       <<span class="tag tag-neu">待观察</span>
       <span class="tag tag-src">Google News - Bangladesh Economy</span>
     </div>
-    <div class="item-summary">研究显示移动税收改革可加速孟加拉国和巴基斯坦经济增长</div>
+    <div class="item-summary">研究显示移动税收改革可加速孟加拉和巴基斯坦经济增长</div>
     <div class="item-meta">
-      实体： | 依据：涉及税收政策变动，影响待评估 | 05-26 11:00
+      实体： | 依据：涉及税收政策调整，影响数字经济 | 05-26 11:00
     </div>
   </div>
   
@@ -1006,7 +1016,6 @@
     <div class="sector-count">2 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1024,7 +1033,6 @@
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1036,9 +1044,9 @@
       
       <span class="tag tag-src">Google News - Bangladesh Jute</span>
     </div>
-    <div class="item-summary">DSCC呼吁居民使用黄麻袋处理祭祀废物，推动黄麻袋需求。</div>
+    <div class="item-summary">DSCC呼吁居民使用黄麻袋处理祭祀废物，推动黄麻应用。</div>
     <div class="item-meta">
-      实体：DSCC | 依据：政策鼓励黄麻袋使用，利好黄麻产业 | 05-27 12:44
+      实体：DSCC | 依据：推广黄麻袋使用，利好黄麻产业 | 05-27 12:44
     </div>
   </div>
   
@@ -1047,10 +1055,43 @@
 <div class="sector-card">
   <div class="sector-header">
     <div class="sector-name">皮革</div>
-    <div class="sector-count">19 条</div>
+    <div class="sector-count">20 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
+  <div class="item ">
+    <div class="item-header">
+      
+      <a href="https://www.jagonews24.com/country/news/1123081" class="item-title" target="_blank">এবার চামড়া পাচারের সম্ভাবনা নেই: বাণিজ্যমন্ত্রী</a>
+    </div>
+    <div>
+      <span class="tag tag-type">政策变动</span>
+      <<span class="tag tag-pos">正面</span>
+      
+      <span class="tag tag-src">Jagonews24</span>
+    </div>
+    <div class="item-summary">孟加拉商务部长称今年皮革走私可能性低，大部分将保存并运至制革厂。</div>
+    <div class="item-meta">
+      实体：খন্দকার আব্দুল মুক্তাদির, বাণিজ্যমন্ত্রী, সাভারের বিসিক চামড়া শিল্পনগরী | 依据：皮革供应链稳定，减少非法流出 | 05-28 21:39
+    </div>
+  </div>
+  
+  <div class="item ">
+    <div class="item-header">
+      
+      <a href="https://www.dhakatribune.com/business/411297/pm-seeks-cooperation-from-all-to-build-desired" class="item-title" target="_blank">Minister: No possibility of smuggling sacrificial animal hides this year</a>
+    </div>
+    <div>
+      <span class="tag tag-type">政策变动</span>
+      <<span class="tag tag-pos">正面</span>
+      
+      <span class="tag tag-src">Dhaka Tribune</span>
+    </div>
+    <div class="item-summary">孟加拉部长称今年无走私动物皮，呼吁增加高附加值皮革出口。</div>
+    <div class="item-meta">
+      实体：Khandakar Abdul Muktadir | 依据：打击走私，利好正规皮革产业 | 05-28 21:38
+    </div>
+  </div>
+  
   <div class="item ">
     <div class="item-header">
       
@@ -1062,13 +1103,12 @@
       
       <span class="tag tag-src">Jagonews24</span>
     </div>
-    <div class="item-summary">孟加拉国政府提高皮革价格，但实际成交价与去年持平，供应量下降，贸易商担忧无法完成采购目标。</div>
+    <div class="item-summary">孟加拉国皮革价格未达政府目标，供应减少，交易商担忧无法完成采购目标。</div>
     <div class="item-meta">
-      实体： | 依据：价格未达预期，供应减少 | 05-28 21:04
+      实体： | 依据：价格低于预期，供应下降 | 05-28 21:04
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1080,13 +1120,12 @@
       
       <span class="tag tag-src">BD Pratidin</span>
     </div>
-    <div class="item-summary">孟加拉制革厂选择性采购生皮，20%被拒收。</div>
+    <div class="item-summary">孟加拉制革厂选择性采购生皮，20%因质量问题被拒收。</div>
     <div class="item-meta">
-      实体： | 依据：生皮拒收率上升，供应链风险 | 05-28 18:33
+      实体： | 依据：原料质量下降影响供应链 | 05-28 18:33
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1098,13 +1137,12 @@
       
       <span class="tag tag-src">Jagonews24</span>
     </div>
-    <div class="item-summary">孟加拉国宰牲节后皮革无人收购，价格暴跌至零，市场极度低迷。</div>
+    <div class="item-summary">孟加拉国宰牲节后无人收购皮革，价格暴跌至零。</div>
     <div class="item-meta">
-      实体：Abu Jafar, Fazlul Karim, Sirajul Islam, Maulana Shahidul Islam, Mirsharai Upazila, Wahedpur Union, Jagonews24 | 依据：皮革市场无人问津，价格崩溃 | 05-28 17:29
+      实体： | 依据：皮革市场崩溃，无人收购。 | 05-28 17:29
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1116,13 +1154,12 @@
       
       <span class="tag tag-src">The Daily Star - Business</span>
     </div>
-    <div class="item-summary">生皮价格低于政府基准，山羊皮因宰牲节需求疲软而滞销。</div>
+    <div class="item-summary">生皮价格低于政府基准，山羊皮需求低迷</div>
     <div class="item-meta">
-      实体： | 依据：皮革原料价格下跌，市场低迷 | 05-28 16:49
+      实体： | 依据：皮革原料价格下跌，市场疲软 | 05-28 16:49
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1133,13 +1170,12 @@
       <<span class="tag tag-neu">待观察</span>
       <span class="tag tag-src">BD Pratidin</span>
     </div>
-    <div class="item-summary">孟加拉国Posta地区生皮市场活跃，但价格和储存引发担忧。</div>
+    <div class="item-summary">孟加拉国Posta生皮市场活跃，但价格和储存问题引发担忧。</div>
     <div class="item-meta">
-      实体： | 依据：价格波动和储存问题可能影响供应链 | 05-28 16:26
+      实体： | 依据：价格波动和储存风险 | 05-28 16:26
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1151,45 +1187,9 @@
       
       <span class="tag tag-src">Prothom Alo English</span>
     </div>
-    <div class="item-summary">孟加拉皮革批发商采购意愿低，小商户面临库存积压困境。</div>
+    <div class="item-summary">孟加拉皮革批发商采购意愿低，小商户面临积压风险</div>
     <div class="item-meta">
-      实体：গাইবান্ধার ক্ষুদ্র ব্যবসায়ীরা | 依据：供应链风险，需求疲软 | 05-28 14:56
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item ">
-    <div class="item-header">
-      
-      <a href="https://news.google.com/rss/articles/CBMivwFBVV95cUxPRkg3ZXM0SVlmMXg1cUdXOUNPaUpJTXRDMnZORHBCV2NXT2tLanVLcmpzdEhGOGp3ZFRGT21xY21tYm5sUzBGODB5ekpSSFlTV24yNWRjSjRzQjNLNGkzVTA5WkN1MGs1c2Nka2xpOUlxdGtPZ1cyZDFGYzlVRHlnLVo0UExFZmMtc2xMMWtxT1VKSXpGVTk4bVQ4Nm1XSEJyd3lIdWpXXzdoNVh0QUdfNGU1NlZ3YUdQUnB5dUdnWdIBxAFBVV95cUxPNkFQUTNpdmMzblVjUGpONDhxT1BGU1ZFeFJSWHlVby1mSWY5RkhMNDVKNjZSQm1ydjdFMEdjak5MVmx2VVJXYmRBd1NkVlhtaEJHNHIyc2M0aXNDVVlBQXE4VFhPQVVDdXRScThGZU9CREJNaTBEd3BCUHhzWEF6aFl3Qm5ETXZpYUhLRHVnNEFlS3NfMFI5RWppMVp2eVRReGU5MldvX0psZ2owcWZ1b2drWEFJLTNlUUdQV1NjQWk0YUx6?oc=5" class="item-title" target="_blank">Commerce minister warns against mismanagement, syndicates in sacrificial hide trade - The Business Standard</a>
-    </div>
-    <div>
-      <span class="tag tag-type">风险事件</span>
-      <<span class="tag tag-neg">负面</span>
-      
-      <span class="tag tag-src">Google News - Bangladesh Business</span>
-    </div>
-    <div class="item-summary">孟商务部长警告祭祀皮贸易中的管理不善和卡特尔行为。</div>
-    <div class="item-meta">
-      实体：孟加拉国商务部 | 依据：涉及管理不善和卡特尔风险 | 05-28 13:55
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item ">
-    <div class="item-header">
-      
-      <a href="https://www.prothomalo.com/bangladesh/district/ndtr61f9f2" class="item-title" target="_blank">‘৪০০ টাকায় কেনা চামড়া ১৫০ টাকার বেশি দিতে চাইছে না কেউ’</a>
-    </div>
-    <div>
-      <span class="tag tag-type">市场数据</span>
-      <<span class="tag tag-neg">负面</span>
-      
-      <span class="tag tag-src">Prothom Alo English</span>
-    </div>
-    <div class="item-summary">皮革价格暴跌，采购价400塔卡，现无人愿出150塔卡以上。</div>
-    <div class="item-meta">
-      实体： | 依据：价格暴跌，市场低迷 | 05-28 11:51
+      实体：গাইবান্ধার ক্ষুদ্র ব্যবসায়ীরা | 依据：皮革滞销，供应链风险 | 05-28 14:56
     </div>
   </div>
   
@@ -1198,28 +1198,9 @@
 <div class="sector-card">
   <div class="sector-header">
     <div class="sector-name">农产品加工</div>
-    <div class="sector-count">4 条</div>
+    <div class="sector-count">3 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item ">
-    <div class="item-header">
-      
-      <a href="https://www.thedailystar.net/business/agriculture/news/no-harvest-no-eid-habiganj-farmers-stare-debt-4185591" class="item-title" target="_blank"><a href="https://www.thedailystar.net/business/agriculture/news/no-harvest-no-eid-habiganj-farmers-stare-debt-4185591" hreflang="en">No harvest, no eid: Habiganj farmers stare at debt</a></a>
-    </div>
-    <div>
-      <span class="tag tag-type">风险事件</span>
-      <<span class="tag tag-neg">负面</span>
-      
-      <span class="tag tag-src">The Daily Star - Business</span>
-    </div>
-    <div class="item-summary">连续降雨淹没Habiganj地区boro稻田，造成3500-4000万塔卡损失。</div>
-    <div class="item-meta">
-      实体： | 依据：自然灾害导致农业损失 | 05-27 19:08
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1231,13 +1212,12 @@
       
       <span class="tag tag-src">The Daily Star - Business</span>
     </div>
-    <div class="item-summary">孟加拉朗布尔地区稻谷售价低于成本价，农民亏损。</div>
+    <div class="item-summary">孟加拉朗布尔地区稻谷售价低于成本，农民亏损。</div>
     <div class="item-meta">
-      实体： | 依据：稻谷价格低于成本，农民亏损 | 05-26 13:17
+      实体： | 依据：价格低于成本，农民亏损 | 05-26 13:17
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1254,7 +1234,6 @@
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1262,12 +1241,13 @@
     </div>
     <div>
       <span class="tag tag-type">市场数据</span>
-      <<span class="tag tag-neu">中性</span>
+      <<span class="tag tag-neg">负面</span>
+      
       <span class="tag tag-src">Google News - Bangladesh Economy</span>
     </div>
     <div class="item-summary">牲畜价格上涨导致孟加拉国宰牲节祭祀数量下降</div>
     <div class="item-meta">
-      实体： | 依据：仅反映市场供需变化 | 05-28 07:52
+      实体： | 依据：影响节日消费，但非直接商业风险 | 05-28 07:52
     </div>
   </div>
   
@@ -1279,7 +1259,6 @@
     <div class="sector-count">1 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1292,7 +1271,7 @@
     </div>
     <div class="item-summary">孟加拉国31名船员在船上度过开斋节，等待返回家园。</div>
     <div class="item-meta">
-      实体：বাংলার জয়যাত্রা | 依据：无商业影响，仅为船员生活报道 | 05-28 13:58
+      实体：বাংলার জয়যাত্রা | 依据：无商业影响，仅人文报道 | 05-28 13:58
     </div>
   </div>
   
@@ -1301,28 +1280,9 @@
 <div class="sector-card">
   <div class="sector-header">
     <div class="sector-name">医疗器械</div>
-    <div class="sector-count">2 条</div>
+    <div class="sector-count">1 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item ">
-    <div class="item-header">
-      
-      <a href="https://www.jagonews24.com/country/news/1123027" class="item-title" target="_blank">তদন্ত প্রতিবেদনের পর আদ-দ্বীন হাসপাতালের বিরুদ্ধে আইনি ব্যবস্থা</a>
-    </div>
-    <div>
-      <span class="tag tag-type">风险事件</span>
-      <<span class="tag tag-neg">负面</span>
-      
-      <span class="tag tag-src">Jagonews24</span>
-    </div>
-    <div class="item-summary">Ad-din医院新生儿死亡事件，卫生部长下令72小时内提交调查报告并采取法律行动。</div>
-    <div class="item-meta">
-      实体：Ad-din Hospital, Ad-din Medical College Hospital, Health Minister Sardar Md. Sakhawat Hossain Bakul | 依据：医院事故导致6名婴儿死亡，面临法律制裁 | 05-28 16:22
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1333,7 +1293,7 @@
       <<span class="tag tag-neu">中性</span>
       <span class="tag tag-src">Jagonews24</span>
     </div>
-    <div class="item-summary">开斋节期间达卡医学院医院急诊及病理服务持续运行，收治超2000名患者。</div>
+    <div class="item-summary">达卡医学院医院在开斋节期间保持繁忙运营，收治超2000名患者。</div>
     <div class="item-meta">
       实体：ঢাকা মেডিকেল কলেজ হাসপাতাল, ডা. মো. আশরাফুল আলম, ব্রিগেডিয়ার জেনারেল মো. আসাদুজ্জামান, অধ্যাপক ডা. প্রভাত চন্দ্র বিশ্বাস, স্বাস্থ্য অধিদপ্তর | 依据：医院常规运营，无商业影响 | 05-28 16:47
     </div>
@@ -1347,7 +1307,6 @@
     <div class="sector-count">1 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1373,7 +1332,6 @@
     <div class="sector-count">2 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1384,13 +1342,12 @@
       <<span class="tag tag-neu">待观察</span>
       <span class="tag tag-src">BD Pratidin</span>
     </div>
-    <div class="item-summary">人工智能正在改变孟加拉国软件工程师的就业格局。</div>
+    <div class="item-summary">人工智能正在改变软件工程师的工作性质。</div>
     <div class="item-meta">
-      实体： | 依据：AI影响就业趋势，需关注 | 05-28 17:00
+      实体： | 依据：AI影响就业趋势 | 05-28 17:00
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item ">
     <div class="item-header">
       
@@ -1412,46 +1369,9 @@
 <div class="sector-card">
   <div class="sector-header">
     <div class="sector-name">其他</div>
-    <div class="sector-count">417 条</div>
+    <div class="sector-count">431 条</div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item item-high">
-    <div class="item-header">
-      <<span class="top-badge">TOP</span>
-      <a href="https://www.bd-pratidin.com/international-news/2026/05/28/1256230" class="item-title" target="_blank">সত্যিই কি যুক্তরাষ্ট্রের হামলায় আইআরজিসির নৌপ্রধান নিহত?</a>
-    </div>
-    <div>
-      <span class="tag tag-type">风险事件</span>
-      <<span class="tag tag-neg">负面</span>
-      
-      <span class="tag tag-src">BD Pratidin</span>
-    </div>
-    <div class="item-summary">报道称美国袭击可能致伊朗伊斯兰革命卫队海军司令死亡。</div>
-    <div class="item-meta">
-      实体：IRGC, 美国 | 依据：涉及军事冲突与制裁风险 | 05-28 14:00
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item item-high">
-    <div class="item-header">
-      <<span class="top-badge">TOP</span>
-      <a href="https://www.bd-pratidin.com/international-news/2026/05/28/1256228" class="item-title" target="_blank">মার্কিন ঘাঁটিতে পাল্টা হামলা চালাল ইরান</a>
-    </div>
-    <div>
-      <span class="tag tag-type">风险事件</span>
-      <<span class="tag tag-neg">负面</span>
-      
-      <span class="tag tag-src">BD Pratidin</span>
-    </div>
-    <div class="item-summary">伊朗对美国军事基地发动报复性袭击</div>
-    <div class="item-meta">
-      实体：ইরান, মার্কিন | 依据：涉及军事冲突，地缘风险 | 05-28 13:47
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -1465,11 +1385,27 @@
     </div>
     <div class="item-summary">印度西孟加拉邦启动移民清查，孟印边境出现大规模聚集，引发紧张局势。</div>
     <div class="item-meta">
-      实体：印度西孟加拉邦, 孟加拉国 | 依据：边境紧张可能影响双边贸易 | 05-28 12:14
+      实体：印度西孟加拉邦, 孟加拉国 | 依据：边境紧张可能影响贸易 | 05-28 15:14
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
+  <div class="item item-high">
+    <div class="item-header">
+      <<span class="top-badge">TOP</span>
+      <a href="https://www.bd-pratidin.com/international-news/2026/05/28/1256228" class="item-title" target="_blank">মার্কিন ঘাঁটিতে পাল্টা হামলা চালাল ইরান</a>
+    </div>
+    <div>
+      <span class="tag tag-type">风险事件</span>
+      <<span class="tag tag-neg">负面</span>
+      
+      <span class="tag tag-src">BD Pratidin</span>
+    </div>
+    <div class="item-summary">伊朗对美国军事基地发动报复性袭击，地缘政治风险上升。</div>
+    <div class="item-meta">
+      实体：伊朗, 美国 | 依据：涉及军事冲突，地缘风险 | 05-28 13:47
+    </div>
+  </div>
+  
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -1481,13 +1417,29 @@
       
       <span class="tag tag-src">Dhaka Tribune</span>
     </div>
-    <div class="item-summary">美国对伊朗南部港口城市阿巴斯港发动新打击，发生三次爆炸。</div>
+    <div class="item-summary">美国对伊朗南部港口城市阿巴斯实施新打击，发生三次爆炸。</div>
     <div class="item-meta">
-      实体：美国, 伊朗, 阿巴斯港 | 依据：军事冲突升级，地缘风险 | 05-28 11:46
+      实体：美国, 伊朗, Bandar Abbas | 依据：军事冲突升级，地缘风险 | 05-28 11:46
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
+  <div class="item item-high">
+    <div class="item-header">
+      <<span class="top-badge">TOP</span>
+      <a href="https://news.google.com/rss/articles/CBMihgFBVV95cUxNelo4OW5aZmt0U2pzQXhCMU5FcVFpSUxEYlIzTUFqMGhNUTFZcnoxMjlIckduTDJZaXJWbkx6b1lvNW5GTU9ZV2tOWFJkNnFaUWVUSlFzUHZ4ZVFPMnA2S0pqTzV5emxxa3VQWDJCLVI1SVFHelFPVjRoTm9lODk2VTd6OElDZw?oc=5" class="item-title" target="_blank">Bangladesh: Growing Crisis of Violence, Impunity, and Insecurity - International Society for Human Rights (ISHR)</a>
+    </div>
+    <div>
+      <span class="tag tag-type">风险事件</span>
+      <<span class="tag tag-neg">负面</span>
+      
+      <span class="tag tag-src">Google News - Bangladesh</span>
+    </div>
+    <div class="item-summary">孟加拉国暴力、有罪不罚和不安全危机加剧</div>
+    <div class="item-meta">
+      实体：International Society for Human Rights (ISHR) | 依据：暴力与不安全影响商业环境 | 05-28 10:06
+    </div>
+  </div>
+  
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -1501,11 +1453,44 @@
     </div>
     <div class="item-summary">美国再次袭击伊朗军事设施，地缘风险升级。</div>
     <div class="item-meta">
-      实体：ইরান, যুক্তরাষ্ট্র | 依据：军事冲突，地缘政治风险。 | 05-28 09:45
+      实体：ইরান, যুক্তরাষ্ট্র | 依据：军事冲突，地缘政治风险 | 05-28 09:45
     </div>
   </div>
   
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
+  <div class="item item-high">
+    <div class="item-header">
+      <<span class="top-badge">TOP</span>
+      <a href="https://news.google.com/rss/articles/CBMixAFBVV95cUxQdWFCcFEyOXpJTS1oR3hzZ0lnaWVHeWdMUGUxTnBLeFkzQzhaeWtlQ3RBTU9yYUV0MW5lc3B1VzBTdTgyUFZXME94SjFmQ2dHSXh3Wjg3ODBBdjM5US1acTZEeHRobWowd1dfNEpkNC1DMm1kWDVRenNEQzQ4RXdoQl8yMkRWck1VQVVXZGF3QW44bjkybW1aR1FyTm90ZTRPeVN6N09zRVlJRUluV1ZaeFllTWtLejFYNTBiSnhWc1hydzA3?oc=5" class="item-title" target="_blank">Massive Measles Outbreak in Bangladesh Kills Hundreds of Children - University of Nebraska Medical Center</a>
+    </div>
+    <div>
+      <span class="tag tag-type">风险事件</span>
+      <<span class="tag tag-neg">负面</span>
+      
+      <span class="tag tag-src">Google News - Bangladesh</span>
+    </div>
+    <div class="item-summary">孟加拉国麻疹爆发致数百名儿童死亡，公共卫生危机。</div>
+    <div class="item-meta">
+      实体：University of Nebraska Medical Center | 依据：大规模疫情，影响商业环境 | 05-28 04:24
+    </div>
+  </div>
+  
+  <div class="item item-high">
+    <div class="item-header">
+      <<span class="top-badge">TOP</span>
+      <a href="https://www.bd-pratidin.com/international-news/2026/05/28/1256173" class="item-title" target="_blank">হরমুজ প্রণালি কেউ নিয়ন্ত্রণ করবে না, ওমানকে ‘উড়িয়ে দেওয়ার’ হুমকি ট্রাম্পের</a>
+    </div>
+    <div>
+      <span class="tag tag-type">风险事件</span>
+      <<span class="tag tag-neg">负面</span>
+      
+      <span class="tag tag-src">BD Pratidin</span>
+    </div>
+    <div class="item-summary">特朗普威胁炸毁阿曼，称无人能控制霍尔木兹海峡。</div>
+    <div class="item-meta">
+      实体：ট্রাম্প, ওমান | 依据：地缘政治风险，影响能源运输 | 05-28 02:15
+    </div>
+  </div>
+  
   <div class="item item-high">
     <div class="item-header">
       <<span class="top-badge">TOP</span>
@@ -1519,41 +1504,7 @@
     </div>
     <div class="item-summary">孟加拉国因伊朗战争冲击经济，寻求IMF援助。</div>
     <div class="item-meta">
-      实体：孟加拉国, 国际货币基金组织, 伊朗 | 依据：战争冲击经济，寻求外部援助 | 05-27 13:57
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item item-high">
-    <div class="item-header">
-      <<span class="top-badge">TOP</span>
-      <a href="https://news.google.com/rss/articles/CBMivAFBVV95cUxOS3BMSktpYjZEUnZaNGlHUVJ3czNEbmJBOTZIbC1xcUtWNWV3VjBOYjUteU5YNWVWbkc4MDRMdDJhZ1pJNUtDM194d2RpZWtFalRhankyVndDbkt0THpFRXFXb1BqY2k0bTlMTHkwajFHUUM5VnlxbjRJWWVQNjZuTElHdEpQX1FOWlU2dW8zV0k4OFY4akVMMl92Z0ZQSUphdDNLSmxCMVBOdkdyNjlkbzhUbFdKcVhKQmlWaw?oc=5" class="item-title" target="_blank">Bangladesh National Budget FY27 | Can FY27 budget bring the economy back to life? - The Daily Star</a>
-    </div>
-    <div>
-      <span class="tag tag-type">政策变动</span>
-      <<span class="tag tag-neu">待观察</span>
-      <span class="tag tag-src">Google News - Bangladesh Economy</span>
-    </div>
-    <div class="item-summary">孟加拉国FY27国家预算发布，旨在重振经济。</div>
-    <div class="item-meta">
-      实体：Bangladesh National Budget, The Daily Star | 依据：预算政策影响广泛，需关注具体措施 | 05-27 00:22
-    </div>
-  </div>
-  
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
-  <div class="item item-high">
-    <div class="item-header">
-      <<span class="top-badge">TOP</span>
-      <a href="https://news.google.com/rss/articles/CBMi0gFBVV95cUxPR2wyUnVGcGFTZTdSck1Tc1hqNVFIN3lSeDBIa2ItcFdmNmZQYTI1WGNRNk1ydmp5Mm5xNHdoRFI0MFQ1V19qLUdiT1JPTW9MQmpjeGx5UlVTMXJaQUJnWTBBdFNXcjczMHBuYlhXU2ItS1dNem96ZDVvM20wMXVENFo4Q216NFpSSWFzWWViR1N4YUdHOGRPYzNaVm5FQ1ZxanJ0Yk1ZSkh5c20zNkUzNlhmcGZuMHMwdjFOcU9iVGpyVjlhZVFNVmdoZW1QU01IOEE?oc=5" class="item-title" target="_blank">IMF says Bangladesh requests new assistance program amid Iran war fallout - Free Malaysia Today</a>
-    </div>
-    <div>
-      <span class="tag tag-type">政策变动</span>
-      <<span class="tag tag-neu">待观察</span>
-      <span class="tag tag-src">Google News - Bangladesh Business</span>
-    </div>
-    <div class="item-summary">孟加拉国因伊朗战争影响向IMF申请新援助计划</div>
-    <div class="item-meta">
-      实体：IMF, Bangladesh | 依据：涉及战争风险与外部援助 | 05-26 23:33
+      实体：孟加拉国, IMF, 伊朗 | 依据：战争导致经济危机，寻求外部援助 | 05-27 13:57
     </div>
   </div>
   
@@ -1562,7 +1513,7 @@
 
 <<footer>
   <div>🇧🇩 孟加拉商业情报日报 &nbsp;|&nbsp; 自动生成于 2026年05月28日 CST</div>
-  <div style="margin-top:6px;">模型: deepseek-chat via 阿里云百炼 &nbsp;|&nbsp; 采集源: RSS/官方公告/媒体 &nbsp;|&nbsp; 仅供研究参考</div>
+  <div style="margin-top:6px;">模型: deepseek-chat via DeepSeek &nbsp;|&nbsp; 采集源: RSS/官方公告/媒体 &nbsp;|&nbsp; 仅供研究参考</div>
 </footer>
 
 </div>
