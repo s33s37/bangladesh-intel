@@ -11,15 +11,15 @@
     --text: #1f2937;
     --muted: #6b7280;
     --accent: #0ea5e9;
-    --red: #be123c;          /* 降饱和深玫瑰红，仅用于边线/小徽章 */
-    --red-light: #fff1f2;    /* 极浅粉背景 */
-    --red-soft: #fee2e2;     /* 负面标签浅红底 */
-    --red-text: #991b1b;     /* 负面标签深红字 */
+    --red: #be123c;
+    --red-light: #fff1f2;
+    --red-soft: #fee2e2;
+    --red-text: #991b1b;
     --green: #059669;
     --amber: #d97706;
     --blue: #2563eb;
     --border: #e5e7eb;
-    --rose-border: #fecdd3;  /* 柔和玫瑰边框 */
+    --rose-border: #fecdd3;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -201,7 +201,6 @@
     margin-right: 4px;
   }
 
-  /* === 高重要性条目：左边线 + 淡粉背景，取代全红背景 === */
   .item.item-high {
     background: var(--red-light);
     border: 1px solid var(--rose-border);
@@ -303,7 +302,6 @@
     <div class="sector-count">{{ sectors[sec]|length }} 条</div>
   </div>
   {% for item in sectors[sec][:8] %}
-  <!-- 关键修改：高重要性条目添加 item-high 类，取代原来的 tag-high 类加到 item 上 -->
   <div class="item {% if item.importance == '高' %}item-high{% endif %}">
     <div class="item-header">
       {% if item.importance == '高' %}<<span class="top-badge">TOP</span>{% endif %}
@@ -327,7 +325,7 @@
 
 <<footer>
   <div>🇧🇩 孟加拉商业情报日报 &nbsp;|&nbsp; 自动生成于 {{ date }} CST</div>
-  <div style="margin-top:6px;">模型: {{ model_name }} via 阿里云百炼 &nbsp;|&nbsp; 采集源: RSS/官方公告/媒体 &nbsp;|&nbsp; 仅供研究参考</div>
+  <div style="margin-top:6px;">模型: {{ model_name }} via DeepSeek &nbsp;|&nbsp; 采集源: RSS/官方公告/媒体 &nbsp;|&nbsp; 仅供研究参考</div>
 </footer>
 
 </div>
