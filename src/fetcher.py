@@ -1,6 +1,6 @@
 """
 孟加拉商业情报日报 - 数据采集模块
-负责从RSS和网页抓取过去24小时的新闻
+负责从所有配置源抓取过去24小时的新闻
 """
 
 import feedparser
@@ -9,7 +9,71 @@ from datetime import datetime, timedelta
 from dateutil import parser as date_parser
 import time
 import hashlib
-from src.config import GENERAL_RSS, GOOGLE_ALERTS_RSS
+
+
+# 所有RSS源配置（从config导入）
+from src.config import (
+    GENERAL_RSS,
+    OFFICIAL_SOURCES,
+    TEXTILE_SOURCES,
+    INFRA_SOURCES,
+    ENERGY_SOURCES,
+    SOLAR_SOURCES,
+    EV_SOURCES,
+    PHARMA_SOURCES,
+    ICT_SOURCES,
+    SHIPBREAKING_SOURCES,
+    FISHERY_SOURCES,
+    TRADITIONAL_SOURCES,
+    TENDER_SOURCES,
+    CHINA_SOURCES,
+    GOOGLE_ALERTS_RSS,
+)
+
+
+def build_source_list():
+    """
+    构建完整的源列表，统一格式
+    """
+    all_sources = []
+    
+    # 1. 通用媒体RSS（已经是正确格式）
+    all_sources.extend(GENERAL_RSS)
+    
+    # 2. 其他分类源（需要提取url和name）
+    category_sources = [
+        ("官方机构", OFFICIAL_SOURCES),
+        ("成衣纺织", TEXTILE_SOURCES),
+        ("基建", INFRA_SOURCES),
+        ("能源", ENERGY_SOURCES),
+        ("太阳能", SOLAR_SOURCES),
+        ("电动两轮车", EV_SOURCES),
+        ("制药", PHARMA_SOURCES),
+        ("ICT电商", ICT_SOURCES),
+        ("船舶拆解", SHIPBREAKING_SOURCES),
+        ("渔业", FISHERY_SOURCES),
+        ("传统产业", TRADITIONAL_SOURCES),
+        ("招标平台", TENDER_SOURCES),
+        ("中国视角", CHINA_SOURCES),
+    ]
+    
+    for category_name, source_list in category_sources:
+        for src in source_list:
+            if isinstance(src, dict) and "url" in src:
+                all_sources.append({
+                    "name": f"{src.get('name', 'Unknown')} ({category_name})",
+                    "url": src["url"]
+                })
+    
+    # 3. Google Alerts RSS
+    for url in GOOGLE_ALERTS_RSS:
+        if url and url.strip():
+            all_sources.append({
+                "name": "Google Alert",
+                "url": url.strip()
+            })
+    
+    return all_sources
 
 
 def fetch_rss(url, source_name, hours=24):
@@ -18,12 +82,10 @@ def fetch_rss(url, source_name, hours=24):
     """
     entries = []
     try:
-        # 设置User-Agent避免被封
         feed = feedparser.parse(url, agent="BangladeshIntelBot/1.0")
         cutoff = datetime.utcnow() - timedelta(hours=hours)
         
         for entry in feed.entries:
-            # 提取发布时间
             published = entry.get('published', entry.get('updated', entry.get('pubDate', '')))
             if not published:
                 continue
@@ -35,20 +97,16 @@ def fetch_rss(url, source_name, hours=24):
             except Exception:
                 continue
             
-            # 只保留 cutoff 之后的条目
             if pub_date >= cutoff:
-                # 提取摘要（不同RSS字段名不同）
                 summary = entry.get('summary', '')
                 description = entry.get('description', '')
                 content = entry.get('content', [{}])[0].get('value', '') if entry.get('content') else ''
-                
-                # 优先使用最长的文本作为内容
                 text = max([summary, description, content], key=len)
                 
                 entries.append({
                     "title": entry.get('title', '').strip(),
                     "link": entry.get('link', ''),
-                    "summary": text[:1500],  # 限制长度，避免超长
+                    "summary": text[:1500],
                     "source": source_name,
                     "pub_date": pub_date.strftime("%m-%d %H:%M"),
                     "raw_date": pub_date,
@@ -59,56 +117,23 @@ def fetch_rss(url, source_name, hours=24):
     return entries
 
 
-def fetch_web_page(url, source_name):
-    """
-    简单网页抓取（备用，用于无RSS的源）
-    注意：这个版本较基础，复杂网页需要后续升级
-    """
-    try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.0"
-        }
-        resp = requests.get(url, headers=headers, timeout=15)
-        if resp.status_code == 200:
-            return [{
-                "title": f"Web page from {source_name}",
-                "link": url,
-                "summary": resp.text[:2000],
-                "source": source_name,
-                "pub_date": datetime.utcnow().strftime("%m-%d %H:%M"),
-                "raw_date": datetime.utcnow(),
-            }]
-    except Exception as e:
-        print(f"[ERROR] Web fetch failed [{source_name}]: {str(e)[:80]}")
-    return []
-
-
 def fetch_all_sources(hours=24):
     """
     采集所有配置源的新闻
     """
     all_entries = []
+    sources = build_source_list()
     
-    # 1. 抓取通用媒体RSS
-    print("[FETCH] General media RSS sources...")
-    for src in GENERAL_RSS:
+    print(f"[FETCH] Total sources: {len(sources)}")
+    
+    for i, src in enumerate(sources, 1):
         entries = fetch_rss(src["url"], src["name"], hours)
-        all_entries.extend(entries)
         if entries:
-            print(f"  + {src['name']}: {len(entries)} entries")
-        time.sleep(0.5)  # 礼貌延迟
-    
-    # 2. 抓取Google Alerts RSS
-    print("[FETCH] Google Alerts RSS sources...")
-    for url in GOOGLE_ALERTS_RSS:
-        if url.strip():
-            entries = fetch_rss(url, "Google Alert", hours)
+            print(f"  [{i}/{len(sources)}] {src['name']}: {len(entries)} entries")
             all_entries.extend(entries)
-            if entries:
-                print(f"  + Google Alert: {len(entries)} entries")
-            time.sleep(0.5)
+        time.sleep(0.3)
     
-    # 3. 去重：按链接去重
+    # 去重
     seen_links = set()
     unique_entries = []
     for e in all_entries:
@@ -117,26 +142,25 @@ def fetch_all_sources(hours=24):
             seen_links.add(link_hash)
             unique_entries.append(e)
     
-    # 4. 按时间倒序排列
+    # 按时间倒序
     unique_entries.sort(key=lambda x: x["raw_date"], reverse=True)
     
-    print(f"[FETCH] Total unique entries: {len(unique_entries)}")
+    print(f"[FETCH] Total unique entries: {len(unique_entries)} from {len(sources)} sources")
     return unique_entries
 
 
 def fetch_for_test():
     """
-    测试用：只抓取少量数据，快速验证
+    测试模式：只抓前3个通用源
     """
     print("[TEST MODE] Fetching limited sources...")
     entries = []
-    # 只抓前2个通用源
-    for src in GENERAL_RSS[:2]:
+    for src in GENERAL_RSS[:3]:
         e = fetch_rss(src["url"], src["name"], hours=48)
-        entries.extend(e)
+        if e:
+            entries.extend(e)
         time.sleep(0.5)
     
-    # 去重
     seen = set()
     unique = []
     for e in entries:
@@ -151,10 +175,14 @@ def fetch_for_test():
 
 
 if __name__ == "__main__":
-    # 本地测试运行
     results = fetch_all_sources(hours=24)
-    print(f"\n--- Sample (first 3) ---")
-    for r in results[:3]:
-        print(f"[{r['source']}] {r['title'][:60]}...")
-        print(f"  Date: {r['pub_date']} | Link: {r['link'][:80]}")
-        print()
+    print(f"\n--- Sources breakdown ---")
+    source_counts = {}
+    for r in results:
+        src = r["source"]
+        source_counts[src] = source_counts.get(src, 0) + 1
+    
+    for src, count in sorted(source_counts.items(), key=lambda x: -x[1])[:10]:
+        print(f"  {src}: {count}")
+    
+    print(f"\nTotal: {len(results)} entries")
