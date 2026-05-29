@@ -21,6 +21,7 @@ if _project_root not in sys.path:
 from src.fetcher import fetch_all_sources, fetch_for_test
 from src.processor import batch_analyze, get_model_name, get_top_signals
 from src.generator import generate_html
+from src.storage import save_daily_json
 from src.wechat import send_wechat_summary
 
 
@@ -37,10 +38,12 @@ def run_daily(test_mode=False):
         entries = fetch_for_test()
     else:
         entries = fetch_all_sources(hours=24)
+    save_daily_json("raw", entries)
 
     if not entries:
         print("[WARN] 未采集到任何新闻，生成空报告")
         # 即使为空也生成报告，避免GitHub Pages断更
+        save_daily_json("analyzed", [])
         output_path = generate_html([], model_name="N/A")
         send_wechat_summary(["采集条目: 0", "状态: 空报告"], output_path)
         print("\n[COMPLETE] 空报告已生成")
@@ -52,6 +55,7 @@ def run_daily(test_mode=False):
     print("\n[STEP 2/3] AI分析处理...")
     start_time = time.time()
     analyzed = batch_analyze(entries)
+    save_daily_json("analyzed", analyzed)
     elapsed = time.time() - start_time
     print(f"[OK] AI分析完成: {len(analyzed)} 条，耗时 {elapsed:.1f} 秒")
 
