@@ -27,7 +27,10 @@ def fetch_all_sources(hours=24):
     all_entries = []
     sources = SOURCES
 
-    print(f"[FETCH] 总数据源: {len(sources)} 个")
+    rss_count = len([s for s in sources if s.get("type", "rss") == "rss"])
+    api_count = len([s for s in sources if s.get("type") == "newsapi"])
+    scraper_count = len([s for s in sources if s.get("type") == "scraper"])
+    print(f"[FETCH] 总数据源: {len(sources)} 个 (RSS: {rss_count}, NewsAPI: {api_count}, Scraper: {scraper_count})")
 
     for i, src in enumerate(sources, 1):
         source_type = src.get("type", "rss")

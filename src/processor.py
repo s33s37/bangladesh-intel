@@ -85,7 +85,7 @@ def analyze_one(title, content, source_name):
             source=source_name,
             content=content[:2000]  # 限制长度，避免超长
         )
-        
+
         # 调用API
         response = client.chat.completions.create(
             model=MODEL_NAME,
@@ -95,10 +95,10 @@ def analyze_one(title, content, source_name):
             max_tokens=512,
             timeout=30
         )
-        
+
         # 解析JSON
         result = json.loads(response.choices[0].message.content)
-        
+
         # 数据校验与清洗
         if result.get("sector") not in SECTORS:
             result["sector"] = "其他"
@@ -112,15 +112,15 @@ def analyze_one(title, content, source_name):
             result["red_flag"] = False
         if not isinstance(result.get("entities"), list):
             result["entities"] = []
-        
+
         # 补充字段（供后续使用）
         result["title"] = title
         result["link"] = ""  # 外部填入
         result["source"] = source_name
         result["pub_date"] = ""
-        
+
         return result
-        
+
     except Exception as e:
         # 任何异常都返回默认结构，保证流程不中断
         return {
@@ -146,30 +146,30 @@ def batch_analyze(entries):
     """
     results = []
     total = len(entries)
-    
+
     print(f"[AI] Starting batch analysis: {total} entries")
-    
+
     for i, entry in enumerate(entries, 1):
         print(f"  [{i}/{total}] Processing: {entry['title'][:50]}...")
-        
+
         result = analyze_one(
             title=entry["title"],
             content=entry["summary"],
             source_name=entry["source"]
         )
-        
+
         # 回填链接和时间
         result["link"] = entry["link"]
         result["pub_date"] = entry["pub_date"]
-        
+
         results.append(result)
-        
+
         # DeepSeek 限速：约 30 RPM，加延迟避免触发
         if i < total and i % 5 == 0:
             print("  [AI] Rate limit protection: sleeping 2s...")
             import time
             time.sleep(2)
-    
+
     print(f"[AI] Batch complete: {len(results)} entries analyzed")
     return results
 
@@ -181,7 +181,7 @@ def get_top_signals(results, n=3):
     # 按重要性排序：高 > 中 > 低
     priority = {"高": 0, "中": 1, "低": 2}
     sorted_results = sorted(results, key=lambda x: priority.get(x.get("importance", "低"), 3))
-    
+
     # 取前N条，且优先取 red_flag=true 或 impact_cn=负面的
     top = []
     for r in sorted_results:
@@ -189,7 +189,7 @@ def get_top_signals(results, n=3):
             top.append(r)
         if len(top) >= n:
             break
-    
+
     # 如果高优先级不够N条，补中性/正面
     if len(top) < n:
         for r in sorted_results:
@@ -197,7 +197,7 @@ def get_top_signals(results, n=3):
                 top.append(r)
             if len(top) >= n:
                 break
-    
+
     return top[:n]
 
 

@@ -90,15 +90,73 @@ NEWSAPI_SOURCES = [
     },
 ]
 
-# === 网页直接抓取源（无 RSS 的网站）===
+# === 网页直接抓取源（无 RSS / RSS 更新慢的网站）===
+# 使用 requests + BeautifulSoup 抓取首页/栏目列表页
+# 注意：部分网站有 Cloudflare 防护（如 gov.bd 域名），requests 无法直接抓取
 SCRAPER_SOURCES = [
-    # 示例：如需抓取政府网站新闻，取消注释并配置 CSS 选择器
+    # --- 四大媒体商业版（补充 RSS 未覆盖的文章） ---
+    {
+        "type": "scraper",
+        "name": "The Daily Star - Business (Scraper)",
+        "url": "https://www.thedailystar.net/business",
+        "item_selector": ".card-content .card-title a",
+        "title_attr": "text",
+        "link_attr": "href",
+        "link_prefix": "https://www.thedailystar.net",
+        "summary_selector": "",
+        "encoding": "utf-8",
+    },
+    {
+        "type": "scraper",
+        "name": "TBS - Economy (Scraper)",
+        "url": "https://www.tbsnews.net/economy",
+        "item_selector": ".card-title a",
+        "title_attr": "text",
+        "link_attr": "href",
+        "link_prefix": "https://www.tbsnews.net",
+        "summary_selector": ".card-intro",
+        "encoding": "utf-8",
+    },
+    # --- Prothom Alo 英文/孟语商业版 ---
+    # 孟语版：https://www.prothomalo.com/business
+    # 使用 .title-link a 选择器，链接为完整 URL
+    {
+        "type": "scraper",
+        "name": "Prothom Alo - Business (Scraper)",
+        "url": "https://www.prothomalo.com/business",
+        "item_selector": ".title-link a",
+        "title_attr": "text",
+        "link_attr": "href",
+        "link_prefix": "",
+        "summary_selector": "",
+        "encoding": "utf-8",
+    },
+    # --- 政府/政策网站（注意：部分 gov.bd 域名有 Cloudflare 防护） ---
+    # 孟加拉经济区管理局 - 招标/政策公告
+    # ⚠️ https://www.beza.gov.bd/ 有 Cloudflare 防护，以下配置仅作模板
     # {
     #     "type": "scraper",
-    #     "name": "NBR-News",
-    #     "url": "https://nbr.gov.bd/",
+    #     "name": "BEZA - News",
+    #     "url": "https://www.beza.gov.bd/",
     #     "item_selector": ".news-item h3 a",
-    #     "link_prefix": "https://nbr.gov.bd",
+    #     "link_prefix": "https://www.beza.gov.bd",
+    # },
+    # 国家税务局 - 关税政策
+    # ⚠️ https://www.nbr.gov.bd/ 有 Cloudflare 防护
+    # {
+    #     "type": "scraper",
+    #     "name": "NBR - News",
+    #     "url": "https://www.nbr.gov.bd/",
+    #     "item_selector": ".news-item h3 a",
+    #     "link_prefix": "https://www.nbr.gov.bd",
+    # },
+    # 孟加拉投资发展局 - 投资政策/激励措施（有 RSS，补充抓取）
+    # {
+    #     "type": "scraper",
+    #     "name": "BIDA - Investment News (Scraper)",
+    #     "url": "https://www.bida.gov.bd/investment-news",
+    #     "item_selector": ".views-field-title a",
+    #     "link_prefix": "https://www.bida.gov.bd",
     # },
 ]
 

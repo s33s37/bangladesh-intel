@@ -43,6 +43,7 @@ class RSSFetcher(BaseFetcher):
                     except Exception:
                         pub_date = datetime.utcnow()
 
+                # 统一转换为 UTC 无时区时间进行比较
                 compare_date = pub_date.replace(tzinfo=None) if pub_date.tzinfo else pub_date
                 if compare_date >= cutoff:
                     summary = BeautifulSoup(
