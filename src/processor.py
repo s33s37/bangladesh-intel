@@ -32,12 +32,38 @@ client = OpenAI(
 # - deepseek-reasoner: 推理更强，适合复杂政策分析（更慢更贵）
 MODEL_NAME = "deepseek-chat"
 
+# AI返回英文产业名 → 中文产业名 映射表
+SECTOR_NAME_MAP = {
+    "garment": "成衣纺织", "textile": "成衣纺织", "apparel": "成衣纺织", "rmg": "成衣纺织", "clothing": "成衣纺织",
+    "infrastructure": "基建", "construction": "基建", "bridge": "基建", "road": "基建",
+    "energy": "能源", "power": "能源", "electricity": "能源", "gas": "能源", "lng": "能源",
+    "solar": "太阳能", "photovoltaic": "太阳能", "renewable": "太阳能",
+    "e-bike": "电动两轮车", "electric two-wheeler": "电动两轮车", "e-motorcycle": "电动两轮车",
+    "ev": "电动汽车", "electric vehicle": "电动汽车", "electric car": "电动汽车",
+    "pharma": "制药", "pharmaceutical": "制药", "drug": "制药", "medicine": "制药",
+    "ict": "ICT电商", "e-commerce": "ICT电商", "software": "ICT电商", "it": "ICT电商", "digital": "ICT电商",
+    "jute": "黄麻",
+    "leather": "皮革", "tannery": "皮革", "footwear": "皮革",
+    "shipbreaking": "船舶拆解", "ship breaking": "船舶拆解", "ship recycling": "船舶拆解",
+    "fisheries": "渔业", "fish": "渔业", "aquaculture": "渔业", "shrimp": "渔业",
+    "agro": "农产品加工", "agriculture": "农产品加工", "food processing": "农产品加工",
+    "ceramic": "陶瓷", "ceramics": "陶瓷", "tile": "陶瓷",
+    "furniture": "家具", "wood": "家具",
+    "light manufacturing": "轻工制造", "light mfg": "轻工制造", "sm": "轻工制造",
+    "shipbuilding": "造船", "ship building": "造船", "vessel": "造船",
+    "medical": "医疗器械", "medical device": "医疗器械", "healthcare": "医疗器械",
+    "plastic": "塑料", "plastics": "塑料", "polymer": "塑料",
+    "appliance": "家电", "appliances": "家电", "electronics": "家电",
+    "digital economy": "数字经济", "digital_economy": "数字经济", "blockchain": "数字经济", "ai": "数字经济",
+    "others": "其他", "other": "其他", "general": "其他",
+}
+
 # Prompt模板：把孟加拉新闻转化为结构化商业情报
 PROMPT_TEMPLATE = """你是一名资深的孟加拉国商业情报分析师，精通中英美产业术语。
 
 任务：对以下新闻进行结构化分析，提取关键商业情报。
 
-可选产业（必须严格从以下列表选择）：
+可选产业（必须严格从以下列表选择，**请使用中文名称输出**）：
 {sectors}
 
 可选情报类型（必须严格从以下列表选择）：
@@ -100,8 +126,11 @@ def analyze_one(title, content, source_name):
         result = json.loads(response.choices[0].message.content)
 
         # 数据校验与清洗
-        if result.get("sector") not in SECTORS:
-            result["sector"] = "其他"
+        raw_sector = result.get("sector", "其他")
+        if raw_sector not in SECTORS:
+            # 尝试通过英文名映射到中文
+            mapped = SECTOR_NAME_MAP.get(raw_sector.strip().lower(), "其他")
+            result["sector"] = mapped if mapped in SECTORS else "其他"
         if result.get("intel_type") not in TYPES:
             result["intel_type"] = "其他"
         if result.get("impact_cn") not in ["正面", "中性", "负面", "待观察"]:

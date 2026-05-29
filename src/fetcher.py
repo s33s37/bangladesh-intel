@@ -4,6 +4,7 @@
 """
 import time
 import hashlib
+import re
 from datetime import datetime
 
 from src.fetchers.rss_fetcher import RSSFetcher
@@ -67,17 +68,33 @@ def fetch_all_sources(hours=24):
         # 礼貌延迟，避免触发限流
         time.sleep(0.3)
 
-    # 去重：基于链接 MD5
+    # 去重：基于链接 MD5 + 标题相似度
     seen_links = set()
+    seen_titles = set()
     unique_entries = []
     for e in all_entries:
         link_hash = hashlib.md5(e["link"].encode()).hexdigest()
-        if link_hash not in seen_links:
-            seen_links.add(link_hash)
-            unique_entries.append(e)
+        if link_hash in seen_links:
+            continue
+        seen_links.add(link_hash)
+
+        # 标题去重：归一化后取前40字符
+        title_key = re.sub(r'[^\w\u4e00-\u9fff]', '', e["title"].lower())[:40]
+        if title_key in seen_titles:
+            continue
+        seen_titles.add(title_key)
+
+        unique_entries.append(e)
 
     # 按时间倒序排列
     unique_entries.sort(key=lambda x: x.get("raw_date", datetime.utcnow()), reverse=True)
+
+    # 限制最大条目数（防止报告过于臃肿）
+    max_items = 80
+    if len(unique_entries) > max_items:
+        print(f"[FETCH] 超过上限{max_items}条，截取最新{max_items}条")
+        unique_entries = unique_entries[:max_items]
+
     print(f"[FETCH] 去重后总计: {len(unique_entries)} 条")
     return unique_entries
 
@@ -96,18 +113,24 @@ def fetch_for_test():
             entries.extend(e)
         time.sleep(0.5)
 
-    # 去重
+    # 去重：链接 + 标题
     seen = set()
+    seen_titles = set()
     unique = []
     for e in entries:
         h = hashlib.md5(e["link"].encode()).hexdigest()
-        if h not in seen:
-            seen.add(h)
-            unique.append(e)
+        if h in seen:
+            continue
+        seen.add(h)
+        title_key = re.sub(r'[^\w\u4e00-\u9fff]', '', e["title"].lower())[:40]
+        if title_key in seen_titles:
+            continue
+        seen_titles.add(title_key)
+        unique.append(e)
 
     unique.sort(key=lambda x: x.get("raw_date", datetime.utcnow()), reverse=True)
     print(f"[TEST] 去重后: {len(unique)} 条")
-    return unique
+    return unique[:40]
 
 
 if __name__ == "__main__":
