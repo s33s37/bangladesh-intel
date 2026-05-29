@@ -264,8 +264,38 @@ SCRAPER_SOURCES = [
     # },
 ]
 
+# === Headless 浏览器抓取源（突破 Cloudflare 防护）===
+# 使用 Playwright 启动 Chromium，绕过 JS 挑战
+# 安装依赖：pip install playwright && playwright install chromium
+BROWSER_SOURCES = [
+    {
+        "type": "browser",
+        "name": "BEZA - 经济区招标",
+        "site": "beza",
+        "url": "https://www.beza.gov.bd/",
+    },
+    {
+        "type": "browser",
+        "name": "NBR - 关税政策",
+        "site": "nbr",
+        "url": "https://www.nbr.gov.bd/",
+    },
+    {
+        "type": "browser",
+        "name": "BIDA - 投资激励",
+        "site": "bida",
+        "url": "https://www.bida.gov.bd/",
+    },
+    {
+        "type": "browser",
+        "name": "Bangladesh Bank - 货币政策",
+        "site": "bb",
+        "url": "https://www.bb.org.bd/",
+    },
+]
+
 # === 统一数据源列表（所有插件共用）===
-SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + SCRAPER_SOURCES
+SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + BROWSER_SOURCES + SCRAPER_SOURCES
 
 
 # === 产业分类标签 ===
