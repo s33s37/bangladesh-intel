@@ -1,86 +1,110 @@
 # ============================================
 # 孟加拉商业情报日报 - 监控矩阵配置
-# 所有RSS源均经过搜索验证
+# 插件化架构：每个源通过 type 字段声明抓取方式
 # ============================================
 
-# === 通用主流媒体RSS（确认有效）===
-GENERAL_RSS = [
+# === RSS 源（通用媒体 + Google News）===
+RSS_SOURCES = [
     # 核心四大媒体
-    {"name": "The Daily Star", "url": "https://www.thedailystar.net/frontpage/rss.xml"},
-    {"name": "The Daily Star - Business", "url": "https://www.thedailystar.net/business/rss.xml"},
-    {"name": "BDNews24", "url": "https://bdnews24.com/?widgetName=rssfeed&widgetId=1150&getXmlFeed=true"},
-    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
-    # {"name": "BDNews24 - Business", "url": "https://bdnews24.com/business"},
-    {"name": "The Business Standard", "url": "https://www.tbsnews.net/rss.xml"},
-    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
-    # {"name": "The Business Standard - Business", "url": "https://www.tbsnews.net/economy/stocks"},
-    {"name": "Dhaka Tribune", "url": "https://www.dhakatribune.com/feed/"},
-    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
-    # {"name": "Dhaka Tribune - Business", "url": "https://www.dhakatribune.com/articles/business"},
-    
+    {"type": "rss", "name": "The Daily Star", "url": "https://www.thedailystar.net/frontpage/rss.xml"},
+    {"type": "rss", "name": "The Daily Star - Business", "url": "https://www.thedailystar.net/business/rss.xml"},
+    {"type": "rss", "name": "BDNews24", "url": "https://bdnews24.com/?widgetName=rssfeed&widgetId=1150&getXmlFeed=true"},
+    {"type": "rss", "name": "The Business Standard", "url": "https://www.tbsnews.net/rss.xml"},
+    {"type": "rss", "name": "Dhaka Tribune", "url": "https://www.dhakatribune.com/feed/"},
+
     # 其他英文媒体
-    {"name": "New Age", "url": "https://www.newagebd.net/rss.xml"},
-    {"name": "The Financial Express", "url": "https://thefinancialexpress.com.bd/rss"},
-    {"name": "Prothom Alo English", "url": "https://www.prothomalo.com/feed/"},
-    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
-    # {"name": "Prothom Alo - Business", "url": "https://en.prothomalo.com/business"},
-    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
-    # {"name": "Prothom Alo - Corporate", "url": "https://en.prothomalo.com/corporate"},
-    {"name": "Bangladesh Post", "url": "https://bangladeshpost.net/rss.xml"},
-    {"name": "The Dhaka Post", "url": "https://thedhakapost.com/rss.xml"},
-    {"name": "Daily Sun", "url": "https://www.daily-sun.com/rss"},
-    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
-    # {"name": "Daily Sun - Business", "url": "https://daily-sun.com/online/business"},
-    {"name": "The Independent", "url": "https://www.theindependentbd.com/rss"},
-    {"name": "The Bangladesh Today", "url": "https://www.thebangladeshtoday.com/rss"},
-    {"name": "United News of Bangladesh", "url": "https://unb.com.bd/rss"},
-    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
-    # {"name": "UNB - Business", "url": "https://unb.com.bd/category/16/Business"},
-    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
-    # {"name": "UNB - Politics", "url": "https://unb.com.bd/category/15/Politics"},
-    {"name": "Bangladesh Sangbad Sangstha", "url": "https://bssnews.net/rss"},
-    
+    {"type": "rss", "name": "New Age", "url": "https://www.newagebd.net/rss.xml"},
+    {"type": "rss", "name": "The Financial Express", "url": "https://thefinancialexpress.com.bd/rss"},
+    {"type": "rss", "name": "Prothom Alo English", "url": "https://www.prothomalo.com/feed/"},
+    {"type": "rss", "name": "Bangladesh Post", "url": "https://bangladeshpost.net/rss.xml"},
+    {"type": "rss", "name": "The Dhaka Post", "url": "https://thedhakapost.com/rss.xml"},
+    {"type": "rss", "name": "Daily Sun", "url": "https://www.daily-sun.com/rss"},
+    {"type": "rss", "name": "The Independent", "url": "https://www.theindependentbd.com/rss"},
+    {"type": "rss", "name": "The Bangladesh Today", "url": "https://www.thebangladeshtoday.com/rss"},
+    {"type": "rss", "name": "United News of Bangladesh", "url": "https://unb.com.bd/rss"},
+    {"type": "rss", "name": "Bangladesh Sangbad Sangstha", "url": "https://bssnews.net/rss"},
+
     # 孟语媒体（可能有英文内容）
-    {"name": "Jugantor", "url": "https://www.jugantor.com/feed/rss.xml"},
-    {"name": "Jagonews24", "url": "https://www.jagonews24.com/rss/rss.xml"},
-    {"name": "Kaler Kantho", "url": "https://www.kalerkantho.com/rss.xml"},
-    {"name": "Bangla News 24", "url": "https://www.banglanews24.com/rss/rss.xml"},
-    {"name": "BD Pratidin", "url": "https://bd-pratidin.com/rss.xml"},
-    {"name": "Samakal", "url": "https://www.samakal.com/rss.xml"},
-    {"name": "Manab Zamin", "url": "https://www.mzamin.com/rss.xml"},
-    {"name": "Daily Naya Diganta", "url": "https://dailynayadiganta.com/rss.xml"},
-    {"name": "Inqilab", "url": "https://dailyinqilab.com/rss.xml"},
-    {"name": "Jaijaidin", "url": "https://www.jaijaidinbd.com/rss.xml"},
-    {"name": "Bhorer Kagoj", "url": "https://www.bhorerkagoj.com/rss.xml"},
-    
+    {"type": "rss", "name": "Jugantor", "url": "https://www.jugantor.com/feed/rss.xml"},
+    {"type": "rss", "name": "Jagonews24", "url": "https://www.jagonews24.com/rss/rss.xml"},
+    {"type": "rss", "name": "Kaler Kantho", "url": "https://www.kalerkantho.com/rss.xml"},
+    {"type": "rss", "name": "Bangla News 24", "url": "https://www.banglanews24.com/rss/rss.xml"},
+    {"type": "rss", "name": "BD Pratidin", "url": "https://bd-pratidin.com/rss.xml"},
+    {"type": "rss", "name": "Samakal", "url": "https://www.samakal.com/rss.xml"},
+    {"type": "rss", "name": "Manab Zamin", "url": "https://www.mzamin.com/rss.xml"},
+    {"type": "rss", "name": "Daily Naya Diganta", "url": "https://dailynayadiganta.com/rss.xml"},
+    {"type": "rss", "name": "Inqilab", "url": "https://dailyinqilab.com/rss.xml"},
+    {"type": "rss", "name": "Jaijaidin", "url": "https://www.jaijaidinbd.com/rss.xml"},
+    {"type": "rss", "name": "Bhorer Kagoj", "url": "https://www.bhorerkagoj.com/rss.xml"},
+
     # 能源垂直媒体
-    {"name": "Energy Bangla", "url": "https://energybangla.com/feed"},
-    
+    {"type": "rss", "name": "Energy Bangla", "url": "https://energybangla.com/feed"},
+
     # 外交/国际视角
-    {"name": "Bangladesh Diplomat", "url": "https://bangladeshdiplomat.com/feed"},
+    {"type": "rss", "name": "Bangladesh Diplomat", "url": "https://bangladeshdiplomat.com/feed"},
+
+    # Google News RSS（关键词搜索，稳定可靠）
+    {"type": "rss", "name": "Google News - Bangladesh", "url": "https://news.google.com/rss/search?q=bangladesh&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Business", "url": "https://news.google.com/rss/search?q=bangladesh+business&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Economy", "url": "https://news.google.com/rss/search?q=bangladesh+economy&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh China", "url": "https://news.google.com/rss/search?q=bangladesh+china&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Solar", "url": "https://news.google.com/rss/search?q=bangladesh+solar+energy&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Textile", "url": "https://news.google.com/rss/search?q=bangladesh+textile+garment&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Investment", "url": "https://news.google.com/rss/search?q=bangladesh+investment&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Infrastructure", "url": "https://news.google.com/rss/search?q=bangladesh+infrastructure&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh RMG", "url": "https://news.google.com/rss/search?q=bangladesh+RMG+garment+export&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Pharma", "url": "https://news.google.com/rss/search?q=bangladesh+pharmaceutical&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Shipbreaking", "url": "https://news.google.com/rss/search?q=bangladesh+ship+breaking&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Leather", "url": "https://news.google.com/rss/search?q=bangladesh+leather+tannery&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh Jute", "url": "https://news.google.com/rss/search?q=bangladesh+jute&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh ICT", "url": "https://news.google.com/rss/search?q=bangladesh+ICT+technology&hl=en-US&gl=US&ceid=US:en"},
+    {"type": "rss", "name": "Google News - Bangladesh EV", "url": "https://news.google.com/rss/search?q=bangladesh+electric+vehicle&hl=en-US&gl=US&ceid=US:en"},
+
+    # 孟加拉语关键词 Google News RSS
+    {"type": "rss", "name": "Google News - BD Business (Bangla)", "url": "https://news.google.com/rss/search?q=%E0%A6%AC%E0%A6%BE%E0%A6%82%E0%A6%B2%E0%A6%BE%E0%A6%A6%E0%A7%87%E0%A6%B6+%E0%A6%AC%E0%A7%8D%E0%A6%AF%E0%A6%AC%E0%A6%B8%E0%A6%BE&hl=bn&gl=BD&ceid=BD:bn"},
+    {"type": "rss", "name": "Google News - BD China (Bangla)", "url": "https://news.google.com/rss/search?q=%E0%A6%9A%E0%A7%80%E0%A6%A8+%E0%A6%AC%E0%A6%BE%E0%A6%82%E0%A6%B2%E0%A6%BE%E0%A6%A6%E0%A7%87%E0%A6%B6&hl=bn&gl=BD&ceid=BD:bn"},
 ]
 
-# === Google News RSS（关键词搜索，稳定可靠）===
-GOOGLE_NEWS_RSS = [
-    {"name": "Google News - Bangladesh", "url": "https://news.google.com/rss/search?q=bangladesh&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Business", "url": "https://news.google.com/rss/search?q=bangladesh+business&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Economy", "url": "https://news.google.com/rss/search?q=bangladesh+economy&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh China", "url": "https://news.google.com/rss/search?q=bangladesh+china&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Solar", "url": "https://news.google.com/rss/search?q=bangladesh+solar+energy&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Textile", "url": "https://news.google.com/rss/search?q=bangladesh+textile+garment&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Investment", "url": "https://news.google.com/rss/search?q=bangladesh+investment&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Infrastructure", "url": "https://news.google.com/rss/search?q=bangladesh+infrastructure&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh RMG", "url": "https://news.google.com/rss/search?q=bangladesh+RMG+garment+export&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Pharma", "url": "https://news.google.com/rss/search?q=bangladesh+pharmaceutical&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Shipbreaking", "url": "https://news.google.com/rss/search?q=bangladesh+ship+breaking&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Leather", "url": "https://news.google.com/rss/search?q=bangladesh+leather+tannery&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh Jute", "url": "https://news.google.com/rss/search?q=bangladesh+jute&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh ICT", "url": "https://news.google.com/rss/search?q=bangladesh+ICT+technology&hl=en-US&gl=US&ceid=US:en"},
-    {"name": "Google News - Bangladesh EV", "url": "https://news.google.com/rss/search?q=bangladesh+electric+vehicle&hl=en-US&gl=US&ceid=US:en"},
+# === NewsAPI 源（需配置 NEWSAPI_KEY 环境变量）===
+NEWSAPI_SOURCES = [
+    {
+        "type": "newsapi",
+        "name": "NewsAPI-BD-Business",
+        "query": "bangladesh business",
+        "lang": "en",
+        "api_key_env": "NEWSAPI_KEY",
+    },
+    {
+        "type": "newsapi",
+        "name": "NewsAPI-BD-Economy",
+        "query": "bangladesh economy OR bangladesh investment",
+        "lang": "en",
+        "api_key_env": "NEWSAPI_KEY",
+    },
+    {
+        "type": "newsapi",
+        "name": "NewsAPI-BD-China",
+        "query": "bangladesh china OR bangladesh BRI",
+        "lang": "en",
+        "api_key_env": "NEWSAPI_KEY",
+    },
 ]
 
-# Google Alerts RSS（用户后续自定义）
-GOOGLE_ALERTS_RSS = []
+# === 网页直接抓取源（无 RSS 的网站）===
+SCRAPER_SOURCES = [
+    # 示例：如需抓取政府网站新闻，取消注释并配置 CSS 选择器
+    # {
+    #     "type": "scraper",
+    #     "name": "NBR-News",
+    #     "url": "https://nbr.gov.bd/",
+    #     "item_selector": ".news-item h3 a",
+    #     "link_prefix": "https://nbr.gov.bd",
+    # },
+]
+
+# === 统一数据源列表（所有插件共用）===
+SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + SCRAPER_SOURCES
+
 
 # === 产业分类标签 ===
 SECTORS = [
