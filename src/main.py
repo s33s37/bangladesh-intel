@@ -9,14 +9,19 @@ import os
 import time
 from datetime import datetime
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
+
 # 确保项目根目录在 sys.path 中（兼容 python src/main.py 和 python -m src.main 两种方式）
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
 from src.fetcher import fetch_all_sources, fetch_for_test
-from src.processor import batch_analyze, get_top_signals
+from src.processor import batch_analyze, get_model_name, get_top_signals
 from src.generator import generate_html
+from src.wechat import send_wechat_summary
 
 
 def run_daily(test_mode=False):
@@ -36,7 +41,8 @@ def run_daily(test_mode=False):
     if not entries:
         print("[WARN] 未采集到任何新闻，生成空报告")
         # 即使为空也生成报告，避免GitHub Pages断更
-        generate_html([], model_name="deepseek-chat")
+        output_path = generate_html([], model_name="N/A")
+        send_wechat_summary(["采集条目: 0", "状态: 空报告"], output_path)
         print("\n[COMPLETE] 空报告已生成")
         return
 
@@ -58,7 +64,7 @@ def run_daily(test_mode=False):
 
     # Step 3: 生成报告
     print("\n[STEP 3/3] 生成HTML报告...")
-    output_path = generate_html(analyzed, model_name="deepseek-chat")
+    output_path = generate_html(analyzed, model_name=get_model_name())
     print(f"[OK] 报告已生成: {output_path}")
 
     # 统计摘要
@@ -74,6 +80,12 @@ def run_daily(test_mode=False):
     print(f"  正面信号:   {pos_count} ✅")
     print(f"  报告路径:   {output_path}")
     print("=" * 60)
+    send_wechat_summary([
+        f"总条目: {len(analyzed)}",
+        f"风险预警: {red_count}",
+        f"政策变动: {policy_count}",
+        f"正面信号: {pos_count}",
+    ], output_path)
     print("[COMPLETE] 日报生成完毕\n")
 
 

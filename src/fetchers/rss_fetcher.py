@@ -23,7 +23,7 @@ class RSSFetcher(BaseFetcher):
 
         try:
             feed = feedparser.parse(url, agent="BangladeshIntelBot/1.0")
-            cutoff = datetime.utcnow() - timedelta(hours=72)
+            cutoff = datetime.utcnow() - timedelta(hours=hours)
 
             for entry in feed.entries:
                 published = (

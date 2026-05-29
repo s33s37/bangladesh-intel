@@ -1,36 +1,60 @@
 """
 孟加拉商业情报日报 - AI处理模块
-调用 DeepSeek API 对新闻进行结构化分析
+调用 DeepSeek/OpenAI API 对新闻进行结构化分析
 """
 
 import os
 import json
 from openai import OpenAI
-from src.config import SECTORS, TYPES, RED_FLAG_KEYWORDS, SECTOR_KEYWORDS
-
-
-# 初始化 DeepSeek 客户端（OpenAI兼容模式）
-api_key = os.environ.get("DEEPSEEK_API_KEY", "")
-if not api_key:
-    # 本地调试 fallback
-    try:
-        with open(os.path.expanduser("~/.deepseek_key"), "r") as f:
-            api_key = f.read().strip()
-    except:
-        pass
-
-if not api_key:
-    raise ValueError("DEEPSEEK_API_KEY 未设置。请在环境变量中配置 DEEPSEEK_API_KEY，或在 ~/.deepseek_key 文件中写入密钥。")
-
-client = OpenAI(
-    api_key=api_key,
-    base_url="https://api.deepseek.com/v1"
-)
+from src.config import SECTORS, TYPES
 
 # 模型选择：
-# - deepseek-chat: 通用对话，速度快，性价比高（推荐）
-# - deepseek-reasoner: 推理更强，适合复杂政策分析（更慢更贵）
-MODEL_NAME = "deepseek-chat"
+# - deepseek-chat: DeepSeek 通用对话，速度快，性价比高（推荐）
+# - gpt-4o-mini: OpenAI fallback
+MODEL_NAME = None
+client = None
+
+
+def _read_optional_key(path):
+    try:
+        with open(os.path.expanduser(path), "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except OSError:
+        return ""
+
+
+def get_ai_client():
+    """
+    延迟初始化 AI 客户端，避免 import 阶段因缺少密钥直接崩溃。
+    优先 DeepSeek，其次 OpenAI。
+    """
+    global client, MODEL_NAME
+    if client:
+        return client
+
+    deepseek_key = os.environ.get("DEEPSEEK_API_KEY", "") or _read_optional_key("~/.deepseek_key")
+    if deepseek_key:
+        MODEL_NAME = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+        client = OpenAI(api_key=deepseek_key, base_url="https://api.deepseek.com/v1")
+        return client
+
+    openai_key = os.environ.get("OPENAI_API_KEY", "") or _read_optional_key("~/.openai_key")
+    if openai_key:
+        MODEL_NAME = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+        client = OpenAI(api_key=openai_key)
+        return client
+
+    raise ValueError("未设置 AI 密钥。请配置 DEEPSEEK_API_KEY 或 OPENAI_API_KEY。")
+
+
+def get_model_name():
+    if MODEL_NAME:
+        return MODEL_NAME
+    try:
+        get_ai_client()
+    except ValueError:
+        return "unconfigured"
+    return MODEL_NAME
 
 # AI返回英文产业名 → 中文产业名 映射表
 SECTOR_NAME_MAP = {
@@ -113,8 +137,9 @@ def analyze_one(title, content, source_name):
         )
 
         # 调用API
-        response = client.chat.completions.create(
-            model=MODEL_NAME,
+        ai_client = get_ai_client()
+        response = ai_client.chat.completions.create(
+            model=get_model_name(),
             messages=[{"role": "user", "content": prompt}],
             response_format={"type": "json_object"},  # 强制JSON输出
             temperature=0.1,  # 低温度，减少幻觉

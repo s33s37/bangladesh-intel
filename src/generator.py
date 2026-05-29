@@ -64,12 +64,15 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
     # 确保输出目录存在
     os.makedirs(output_dir, exist_ok=True)
 
-    # 写入文件
+    # 写入首页和日期归档
     output_path = os.path.join(output_dir, "index.html")
+    archive_path = os.path.join(output_dir, f"report_{datetime.now().strftime('%Y-%m-%d')}.html")
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
+    with open(archive_path, "w", encoding="utf-8") as f:
+        f.write(html)
 
-    print(f"[GEN] Report generated: {output_path} ({total} items, {len(red_flags)} red flags)")
+    print(f"[GEN] Report generated: {output_path}, {archive_path} ({total} items, {len(red_flags)} red flags)")
     return output_path
 
 
