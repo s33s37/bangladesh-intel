@@ -3,6 +3,7 @@
 """
 
 import feedparser
+from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from dateutil import parser as date_parser
 import time
@@ -44,15 +45,15 @@ def fetch_rss(url, source_name, hours=24):
             cutoff = datetime.utcnow() - timedelta(hours=72)
             compare_date = pub_date.replace(tzinfo=None) if pub_date.tzinfo else pub_date
             if compare_date >= cutoff:
-                summary = entry.get('summary', '')
-                description = entry.get('description', '')
+                summary = BeautifulSoup(entry.get('summary', ''), "html.parser").get_text(strip=True)
+                description = BeautifulSoup(entry.get('description', ''), "html.parser").get_text(strip=True)
                 content_val = ''
                 if entry.get('content') and isinstance(entry.get('content'), list) and len(entry.get('content')) > 0:
                     content_val = entry.get('content')[0].get('value', '')
                 text = max([summary, description, content_val], key=len)
                 
                 entries.append({
-                    "title": entry.get('title', '').strip(),
+                    "title": BeautifulSoup(entry.get('title', ''), "html.parser").get_text(strip=True),
                     "link": entry.get('link', ''),
                     "summary": text[:1500],
                     "source": source_name,
