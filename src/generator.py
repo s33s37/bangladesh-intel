@@ -71,142 +71,37 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
 
     print(f"[GEN] Report generated: {output_path} ({total} items, {len(red_flags)} red flags)")
     return output_path
-        .footer { text-align: center; padding: 24px 16px; font-size: 0.75rem; color: var(--text-light); }
-        .footer a { color: var(--info); text-decoration: none; }
-        @media (max-width: 480px) { .stats-panel { grid-template-columns: repeat(3, 1fr); } .header h1 { font-size: 1.2rem; } }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #bdc3c7; border-radius: 3px; }
-        """
-
-        # 构建完整HTML
-        html_parts = [
-            '<!DOCTYPE html>',
-            '<html lang="zh-CN">',
-            '<head>',
-            '    <meta charset="UTF-8">',
-            '    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">',
-            '    <title>孟加拉商业情报日报 | ' + date_str + '</title>',
-            '    <style>' + css + '</style>',
-            '</head>',
-            '<body>',
-            '    <div class="header">',
-            '        <h1>孟加拉商业情报日报 <span class="badge-live">LIVE</span></h1>',
-            '        <div class="subtitle">服务中国政策制定者 · 智库学者 · 跨境电商从业者</div>',
-            '        <div class="date">' + date_str + ' | 共采集 ' + str(stats['total']) + ' 条情报 | 置信度 ' + str(int(stats.get('avg_confidence', 0) * 100)) + '%</div>',
-            '    </div>',
-            '    <div class="container">',
-            stats_panel,
-            risk_section,
-            policy_section,
-            positive_section,
-            '        <div style="margin: 20px 0; text-align: center; font-size: 0.85rem; color: var(--text-light);">',
-            '            —— 分产业详细动态 ——',
-            '        </div>',
-            industry_sections,
-            '        <div class="footer">',
-            '            <p>孟加拉商业情报日报系统 | 自动生成于 ' + datetime.now().strftime("%Y-%m-%d %H:%M") + '</p>',
-            '            <p>数据来源: 50+孟加拉及国际媒体RSS | AI分析模型: GPT-4o-mini / DeepSeek</p>',
-            '            <p>本站仅供研究参考，不构成投资建议</p>',
-            '        </div>',
-            '    </div>',
-            '</body>',
-            '</html>'
-        ]
-
-        return "\n".join(html_parts)
-
-    def _build_section(self, title, section_class, items, max_items=10, empty_msg="暂无数据"):
-        """构建区域HTML"""
-        if not items:
-            return '<div class="section ' + section_class + '"><div class="section-header">' + title + '</div><div class="section-content"><div class="empty-msg">' + empty_msg + '</div></div></div>'
-
-        cards = ""
-        for item in items[:max_items]:
-            cards += self._build_card(item)
-
-        return '<div class="section ' + section_class + '"><div class="section-header">' + title + ' (' + str(len(items[:max_items])) + ')</div><div class="section-content">' + cards + '</div></div>'
-
-    def _build_industry_section(self, ind_id, ind_name, ind_color, items):
-        """构建产业分区HTML"""
-        cards = ""
-        for item in items[:5]:
-            cards += self._build_card(item)
-
-        return '<div class="section industry-section"><div class="section-header" style="border-left-color: ' + ind_color + ';"><span style="color: ' + ind_color + ';">●</span> ' + ind_name + ' (' + str(len(items)) + ')</div><div class="section-content">' + cards + '</div></div>'
-
-    def _build_card(self, item):
-        """构建单条情报卡片"""
-        original = item.get("original", {})
-        title = original.get("title", "未知标题")
-        link = original.get("link", "#")
-        source = original.get("source_name", "未知来源")
-        pub_date = original.get("published", "")[:10]
-
-        summary = item.get("chinese_summary", "")
-        impact = item.get("impact", "neutral")
-        importance = item.get("importance", "low")
-        risk_level = item.get("risk_level", "none")
-        industries = item.get("industries", ["others"])
-        intel_type = item.get("intelligence_type", "general")
-        entities = item.get("entities", {})
-        evidence = item.get("evidence", [])
-        confidence = item.get("confidence", 0)
-
-        impact_badge, _ = self._get_impact_badge(impact)
-        importance_badge = self._get_importance_badge(importance)
-        risk_badge = self._get_risk_badge(risk_level)
-
-        # 产业标签
-        industry_badges = ""
-        for ind in industries[:2]:
-            ind_name = self._get_industry_name(ind)
-            industry_badges += '<span class="badge badge-industry">' + ind_name + '</span>'
-
-        type_name = self._get_type_name(intel_type)
-        type_badge = '<span class="badge badge-type">' + type_name + '</span>'
-
-        # 中国相关标记
-        china_badge = ""
-        if any(kw in summary.lower() for kw in ["中国", "中方", "北京", "上海", "深圳", "一带一路", "bri", "china", "chinese"]):
-            china_badge = '<span class="badge badge-china">涉华</span>'
-
-        # 实体标签
-        entity_html = ""
-        all_entities = []
-        for key in ["companies", "organizations", "people", "projects", "amounts", "locations"]:
-            all_entities.extend(entities.get(key, [])[:3])
-        if all_entities:
-            entity_html = '<div class="card-entities">'
-            for e in all_entities[:6]:
-                entity_html += '<span class="entity-tag">' + str(e) + '</span>'
-            entity_html += '</div>'
-
-        # 证据
-        evidence_html = ""
-        if evidence:
-            evidence_html = '<div class="card-evidence">依据: ' + "; ".join(evidence[:2]) + '</div>'
-
-        return '<div class="intel-card"><div class="card-header"><div class="card-title">' + title + '</div><div class="card-badges">' + impact_badge + importance_badge + risk_badge + china_badge + '</div></div><div class="card-summary">' + summary + '</div>' + entity_html + evidence_html + '<div class="card-meta"><div class="card-meta-left"><span class="card-source">' + source + '</span><span>' + pub_date + '</span>' + industry_badges + type_badge + '<span style="color: #95a5a6;">置信度 ' + str(int(confidence * 100)) + '%</span></div><a href="' + link + '" target="_blank" class="card-link">原文 →</a></div></div>'
 
 
 if __name__ == "__main__":
-    gen = ReportGenerator()
-    test_analyses = [
+    test_items = [
         {
-            "industries": ["garment"],
-            "intelligence_type": "market",
-            "entities": {"companies": ["BGMEA"], "amounts": ["$28.4B"]},
-            "chinese_summary": "孟加拉国成衣出口连续6个月负增长，主要受欧盟市场需求下滑影响。中国企业在孟投资纺织业面临订单减少风险。",
-            "impact": "negative",
-            "impact_reason": "出口下滑影响产业信心",
-            "importance": "high",
-            "risk_level": "medium",
-            "risk_tags": ["出口下滑", "需求疲软"],
-            "evidence": ["连续6个月负增长", "欧盟订单减少"],
-            "confidence": 0.88,
-            "original": {"title": "RMG exports fall for 6th month", "link": "#", "source_name": "The Daily Star", "published": "2026-05-29"}
+            "title": "Test News 1",
+            "link": "https://example.com/1",
+            "source": "Test",
+            "pub_date": "05-28 10:00",
+            "sector": "太阳能",
+            "intel_type": "政策变动",
+            "entities": ["NBR", "IDCOL"],
+            "summary_cn": "太阳能设备进口关税全免延期两年",
+            "impact_cn": "正面",
+            "importance": "高",
+            "red_flag": False,
+            "reason": "政策红利"
+        },
+        {
+            "title": "Test News 2",
+            "link": "https://example.com/2",
+            "source": "Test",
+            "pub_date": "05-28 09:30",
+            "sector": "能源",
+            "intel_type": "风险事件",
+            "entities": ["BPDB", "达卡工业区"],
+            "summary_cn": "达卡工业区限电4小时，纺织企业成本上升",
+            "impact_cn": "负面",
+            "importance": "高",
+            "red_flag": True,
+            "reason": "停电危机"
         }
     ]
-    test_stats = {"total": 1, "risk_count": 1, "policy_count": 0, "by_impact": {"positive": 0, "neutral": 0, "negative": 1}, "china_related": 1, "avg_confidence": 0.88}
-    gen.generate_html(test_analyses, test_stats, output_dir="test_docs")
+    generate_html(test_items)
