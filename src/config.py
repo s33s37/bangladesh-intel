@@ -9,27 +9,35 @@ GENERAL_RSS = [
     {"name": "The Daily Star", "url": "https://www.thedailystar.net/frontpage/rss.xml"},
     {"name": "The Daily Star - Business", "url": "https://www.thedailystar.net/business/rss.xml"},
     {"name": "BDNews24", "url": "https://bdnews24.com/?widgetName=rssfeed&widgetId=1150&getXmlFeed=true"},
-    {"name": "BDNews24 - Business", "url": "https://bdnews24.com/business"},
+    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
+    # {"name": "BDNews24 - Business", "url": "https://bdnews24.com/business"},
     {"name": "The Business Standard", "url": "https://www.tbsnews.net/rss.xml"},
-    {"name": "The Business Standard - Business", "url": "https://www.tbsnews.net/economy/stocks"},
+    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
+    # {"name": "The Business Standard - Business", "url": "https://www.tbsnews.net/economy/stocks"},
     {"name": "Dhaka Tribune", "url": "https://www.dhakatribune.com/feed/"},
-    {"name": "Dhaka Tribune - Business", "url": "https://www.dhakatribune.com/articles/business"},
+    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
+    # {"name": "Dhaka Tribune - Business", "url": "https://www.dhakatribune.com/articles/business"},
     
     # 其他英文媒体
     {"name": "New Age", "url": "https://www.newagebd.net/rss.xml"},
     {"name": "The Financial Express", "url": "https://thefinancialexpress.com.bd/rss"},
     {"name": "Prothom Alo English", "url": "https://www.prothomalo.com/feed/"},
-    {"name": "Prothom Alo - Business", "url": "https://en.prothomalo.com/business"},
-    {"name": "Prothom Alo - Corporate", "url": "https://en.prothomalo.com/corporate"},
+    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
+    # {"name": "Prothom Alo - Business", "url": "https://en.prothomalo.com/business"},
+    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
+    # {"name": "Prothom Alo - Corporate", "url": "https://en.prothomalo.com/corporate"},
     {"name": "Bangladesh Post", "url": "https://bangladeshpost.net/rss.xml"},
     {"name": "The Dhaka Post", "url": "https://thedhakapost.com/rss.xml"},
     {"name": "Daily Sun", "url": "https://www.daily-sun.com/rss"},
-    {"name": "Daily Sun - Business", "url": "https://daily-sun.com/online/business"},
+    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
+    # {"name": "Daily Sun - Business", "url": "https://daily-sun.com/online/business"},
     {"name": "The Independent", "url": "https://www.theindependentbd.com/rss"},
     {"name": "The Bangladesh Today", "url": "https://www.thebangladeshtoday.com/rss"},
     {"name": "United News of Bangladesh", "url": "https://unb.com.bd/rss"},
-    {"name": "UNB - Business", "url": "https://unb.com.bd/category/16/Business"},
-    {"name": "UNB - Politics", "url": "https://unb.com.bd/category/15/Politics"},
+    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
+    # {"name": "UNB - Business", "url": "https://unb.com.bd/category/16/Business"},
+    # [FIXME] 无效RSS地址（普通网页，非RSS Feed）：
+    # {"name": "UNB - Politics", "url": "https://unb.com.bd/category/15/Politics"},
     {"name": "Bangladesh Sangbad Sangstha", "url": "https://bssnews.net/rss"},
     
     # 孟语媒体（可能有英文内容）

@@ -19,6 +19,9 @@ if not api_key:
     except:
         pass
 
+if not api_key:
+    raise ValueError("DEEPSEEK_API_KEY 未设置。请在环境变量中配置 DEEPSEEK_API_KEY，或在 ~/.deepseek_key 文件中写入密钥。")
+
 client = OpenAI(
     api_key=api_key,
     base_url="https://api.deepseek.com/v1"

@@ -40,11 +40,16 @@ def fetch_rss(url, source_name, hours=24):
                     pub_date = datetime.utcnow()
             
             # 放宽时间限制：保留过去72小时的内容（避免时区问题）
-            if pub_date >= (datetime.utcnow() - timedelta(hours=72)):
+            # 统一转换为 UTC 无时区时间进行比较
+            cutoff = datetime.utcnow() - timedelta(hours=72)
+            compare_date = pub_date.replace(tzinfo=None) if pub_date.tzinfo else pub_date
+            if compare_date >= cutoff:
                 summary = entry.get('summary', '')
                 description = entry.get('description', '')
-                content = entry.get('content', [{}])[0].get('value', '') if entry.get('content') else ''
-                text = max([summary, description, content], key=len)
+                content_val = ''
+                if entry.get('content') and isinstance(entry.get('content'), list) and len(entry.get('content')) > 0:
+                    content_val = entry.get('content')[0].get('value', '')
+                text = max([summary, description, content_val], key=len)
                 
                 entries.append({
                     "title": entry.get('title', '').strip(),

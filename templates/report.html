@@ -229,7 +229,7 @@
 <body>
 <div class="container">
 
-<<header>
+<header>
   <h1>🇧🇩 孟加拉商业情报日报</h1>
   <div class="subtitle">Bangladesh Business Intelligence Daily &nbsp;|&nbsp; {{ date }} &nbsp;|&nbsp; 第{{ issue_no }}期</div>
 </header>
@@ -304,14 +304,14 @@
   {% for item in sectors[sec][:8] %}
   <div class="item {% if item.importance == '高' %}item-high{% endif %}">
     <div class="item-header">
-      {% if item.importance == '高' %}<<span class="top-badge">TOP</span>{% endif %}
+      {% if item.importance == '高' %}<span class="top-badge">TOP</span>{% endif %}
       <a href="{{ item.link|e }}" class="item-title" target="_blank">{{ item.title }}</a>
     </div>
     <div>
       <span class="tag tag-type">{{ item.intel_type }}</span>
-      {% if item.impact_cn == '正面' %}<<span class="tag tag-pos">正面</span>
-      {% elif item.impact_cn == '负面' %}<<span class="tag tag-neg">负面</span>
-      {% else %}<<span class="tag tag-neu">{{ item.impact_cn }}</span>{% endif %}
+      {% if item.impact_cn == '正面' %}<span class="tag tag-pos">正面</span>
+      {% elif item.impact_cn == '负面' %}<span class="tag tag-neg">负面</span>
+      {% else %}<span class="tag tag-neu">{{ item.impact_cn }}</span>{% endif %}
       <span class="tag tag-src">{{ item.source }}</span>
     </div>
     <div class="item-summary">{{ item.summary_cn }}</div>
@@ -323,7 +323,7 @@
 </div>
 {% endfor %}
 
-<<footer>
+<footer>
   <div>🇧🇩 孟加拉商业情报日报 &nbsp;|&nbsp; 自动生成于 {{ date }} CST</div>
   <div style="margin-top:6px;">模型: {{ model_name }} via DeepSeek &nbsp;|&nbsp; 采集源: RSS/官方公告/媒体 &nbsp;|&nbsp; 仅供研究参考</div>
 </footer>
