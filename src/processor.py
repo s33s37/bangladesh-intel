@@ -193,6 +193,27 @@ def analyze_one(title, content, source_name):
         }
 
 
+def analyze_indicator(entry):
+    """
+    宏观/汇率等结构化指标不需要再调用大模型，直接转成日报字段。
+    """
+    return {
+        "sector": "其他",
+        "intel_type": "市场数据",
+        "entities": [entry.get("source", "")],
+        "summary_cn": entry.get("summary") or entry.get("title", ""),
+        "impact_cn": "待观察",
+        "importance": "低",
+        "red_flag": False,
+        "reason": "结构化数据",
+        "title": entry.get("title", ""),
+        "link": entry.get("link", ""),
+        "source": entry.get("source", ""),
+        "pub_date": entry.get("pub_date", ""),
+        "item_type": "indicator",
+    }
+
+
 def batch_analyze(entries):
     """
     批量分析新闻条目
@@ -206,15 +227,19 @@ def batch_analyze(entries):
     for i, entry in enumerate(entries, 1):
         print(f"  [{i}/{total}] Processing: {entry['title'][:50]}...")
 
-        result = analyze_one(
-            title=entry["title"],
-            content=entry["summary"],
-            source_name=entry["source"]
-        )
+        if entry.get("item_type") == "indicator":
+            result = analyze_indicator(entry)
+        else:
+            result = analyze_one(
+                title=entry["title"],
+                content=entry["summary"],
+                source_name=entry["source"]
+            )
 
         # 回填链接和时间
         result["link"] = entry["link"]
         result["pub_date"] = entry["pub_date"]
+        result["item_type"] = entry.get("item_type", "news")
 
         results.append(result)
 

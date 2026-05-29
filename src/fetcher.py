@@ -6,6 +6,7 @@ import time
 import hashlib
 import re
 from datetime import datetime
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from src.fetchers.rss_fetcher import RSSFetcher
 from src.fetchers.newsapi_fetcher import NewsAPIFetcher
@@ -26,6 +27,70 @@ FETCHER_REGISTRY = {
     "pdf": PDFFetcher,
     "social": SocialFetcher,
 }
+
+ITEM_TYPE_BY_SOURCE = {
+    "api": "indicator",
+    "pdf": "policy_doc",
+    "social": "social",
+}
+
+TRACKING_PARAMS = {
+    "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+    "fbclid", "gclid", "mc_cid", "mc_eid",
+}
+
+
+def normalize_link(link):
+    """Normalize links before deduplication."""
+    if not link:
+        return ""
+
+    parsed = urlparse(link.strip())
+    query = parse_qs(parsed.query, keep_blank_values=True)
+    query = {k: v for k, v in query.items() if k not in TRACKING_PARAMS}
+    normalized_query = urlencode(query, doseq=True)
+
+    return urlunparse((
+        parsed.scheme.lower(),
+        parsed.netloc.lower(),
+        parsed.path.rstrip("/"),
+        "",
+        normalized_query,
+        "",
+    ))
+
+
+def normalize_title(title):
+    """Normalize titles enough to merge syndicated duplicates."""
+    title = re.sub(r'\s+', ' ', title or "").strip().lower()
+    title = re.sub(r'\s[-|]\s(?:the )?[\w\s.&]+$', '', title)
+    return re.sub(r'[^\w\u4e00-\u9fff]', '', title)
+
+
+def deduplicate_entries(entries):
+    """Deduplicate by normalized link, then normalized title."""
+    seen_links = set()
+    seen_titles = set()
+    unique_entries = []
+
+    for entry in entries:
+        title_key = normalize_title(entry.get("title", ""))[:60]
+        link_key = normalize_link(entry.get("link", ""))
+
+        if link_key:
+            link_hash = hashlib.md5(link_key.encode("utf-8")).hexdigest()
+            if link_hash in seen_links:
+                continue
+            seen_links.add(link_hash)
+
+        if title_key:
+            if title_key in seen_titles:
+                continue
+            seen_titles.add(title_key)
+
+        unique_entries.append(entry)
+
+    return unique_entries
 
 
 def fetch_all_sources(hours=24):
@@ -57,6 +122,9 @@ def fetch_all_sources(hours=24):
         fetcher = fetcher_class()
         try:
             entries = fetcher.fetch(src, hours)
+            for entry in entries:
+                entry.setdefault("item_type", ITEM_TYPE_BY_SOURCE.get(source_type, "news"))
+                entry.setdefault("source_type", source_type)
             if entries:
                 print(f"  [{i}/{len(sources)}] [{source_name}]: {len(entries)} 条")
             else:
@@ -68,23 +136,7 @@ def fetch_all_sources(hours=24):
         # 礼貌延迟，避免触发限流
         time.sleep(0.3)
 
-    # 去重：基于链接 MD5 + 标题相似度
-    seen_links = set()
-    seen_titles = set()
-    unique_entries = []
-    for e in all_entries:
-        link_hash = hashlib.md5(e["link"].encode()).hexdigest()
-        if link_hash in seen_links:
-            continue
-        seen_links.add(link_hash)
-
-        # 标题去重：归一化后取前40字符
-        title_key = re.sub(r'[^\w\u4e00-\u9fff]', '', e["title"].lower())[:40]
-        if title_key in seen_titles:
-            continue
-        seen_titles.add(title_key)
-
-        unique_entries.append(e)
+    unique_entries = deduplicate_entries(all_entries)
 
     # 按时间倒序排列
     unique_entries.sort(key=lambda x: x.get("raw_date", datetime.utcnow()), reverse=True)
@@ -110,23 +162,13 @@ def fetch_for_test():
     for src in rss_sources:
         e = fetcher.fetch(src, hours=48)
         if e:
+            for entry in e:
+                entry.setdefault("item_type", "news")
+                entry.setdefault("source_type", "rss")
             entries.extend(e)
         time.sleep(0.5)
 
-    # 去重：链接 + 标题
-    seen = set()
-    seen_titles = set()
-    unique = []
-    for e in entries:
-        h = hashlib.md5(e["link"].encode()).hexdigest()
-        if h in seen:
-            continue
-        seen.add(h)
-        title_key = re.sub(r'[^\w\u4e00-\u9fff]', '', e["title"].lower())[:40]
-        if title_key in seen_titles:
-            continue
-        seen_titles.add(title_key)
-        unique.append(e)
+    unique = deduplicate_entries(entries)
 
     unique.sort(key=lambda x: x.get("raw_date", datetime.utcnow()), reverse=True)
     print(f"[TEST] 去重后: {len(unique)} 条")

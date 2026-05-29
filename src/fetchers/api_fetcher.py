@@ -4,9 +4,7 @@ API 数据抓取插件
 支持：世界银行 API、孟加拉央行汇率、Trading Economics（预留）
 """
 import os
-import json
-import re
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import requests
 
@@ -92,8 +90,8 @@ class APIFetcher(BaseFetcher):
                 print(f"  [WARN] [WorldBank] {label}: 无数据")
                 return []
 
-            entries = []
-            for item in data[1]:  # data[1] 包含实际数据
+            entry = None
+            for item in data[1]:  # data[1] 包含实际数据，按年份倒序返回
                 value = item.get("value")
                 year = item.get("date", "")
                 if value is None:
@@ -116,12 +114,14 @@ class APIFetcher(BaseFetcher):
                     "source": source_name,
                     "pub_date": f"{year}-12-31 00:00",
                     "raw_date": datetime(int(year), 12, 31) if year.isdigit() else datetime.utcnow(),
+                    "item_type": "indicator",
                 }
-                entries.append(entry)
+                break
 
-            if entries:
-                print(f"  [OK] [WorldBank] {label}: {len(entries)} 条年度数据")
-            return entries
+            if entry:
+                print(f"  [OK] [WorldBank] {label}: 最新年度数据 1 条")
+                return [entry]
+            return []
 
         except requests.exceptions.RequestException as e:
             print(f"  [ERROR] [WorldBank] {label}: {str(e)[:60]}")
@@ -179,6 +179,7 @@ class APIFetcher(BaseFetcher):
                         "source": source_name,
                         "pub_date": pub_date.strftime("%m-%d %H:%M"),
                         "raw_date": pub_date,
+                        "item_type": "indicator",
                     }
                     entries.append(entry)
 
@@ -195,6 +196,7 @@ class APIFetcher(BaseFetcher):
                             "source": source_name,
                             "pub_date": today.strftime("%m-%d %H:%M"),
                             "raw_date": today,
+                            "item_type": "indicator",
                         }
                         entries.append(entry)
 
@@ -249,6 +251,7 @@ class APIFetcher(BaseFetcher):
                     "source": source_name,
                     "pub_date": pub_date.strftime("%m-%d %H:%M"),
                     "raw_date": pub_date,
+                    "item_type": "indicator",
                 }
                 entries.append(entry)
 
