@@ -320,8 +320,41 @@ PDF_SOURCES = [
     },
 ]
 
+# === 社交媒体/即时新闻源（X/Twitter + Telegram）===
+# 实时抓取孟加拉财经博主和商业频道消息
+# X/Twitter 需配置 TWITTER_BEARER_TOKEN
+# Telegram 需配置 TELEGRAM_API_ID + TELEGRAM_API_HASH
+SOCIAL_SOURCES = [
+    # X/Twitter 财经媒体（需配置 TWITTER_BEARER_TOKEN 环境变量）
+    {
+        "type": "social",
+        "platform": "twitter",
+        "name": "X - 孟加拉财经媒体",
+        "accounts": ["tbsnews", "dailystar_news", "bdnews24", "dhakatribune", "financialexpress"],
+        "keywords": [],  # 空=全部抓取
+        "max_items": 15,
+    },
+    {
+        "type": "social",
+        "platform": "twitter",
+        "name": "X - 孟加拉商业机构",
+        "accounts": ["bgmea", "beza_bd", "bida_bd"],
+        "keywords": [],
+        "max_items": 15,
+    },
+    # Telegram 商业频道（需配置 TELEGRAM_API_ID + TELEGRAM_API_HASH）
+    {
+        "type": "social",
+        "platform": "telegram",
+        "name": "Telegram - 孟加拉商业",
+        "channels": ["bd_business_news", "bd_stock_market"],
+        "keywords": [],
+        "max_items": 15,
+    },
+]
+
 # === 统一数据源列表（所有插件共用）===
-SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + BROWSER_SOURCES + PDF_SOURCES + SCRAPER_SOURCES
+SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + BROWSER_SOURCES + PDF_SOURCES + SOCIAL_SOURCES + SCRAPER_SOURCES
 
 
 # === 产业分类标签 ===
