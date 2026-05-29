@@ -294,8 +294,34 @@ BROWSER_SOURCES = [
     },
 ]
 
+# === PDF 文档解析源（政府公报 / SRO / 政策文件）===
+# 下载 PDF 并用 pdfplumber 提取文本，自动识别 SRO/公报/政策等类型
+# 安装依赖：pip install pdfplumber
+PDF_SOURCES = [
+    {
+        "type": "pdf",
+        "name": "NBR - SRO法规",
+        "site": "nbr_sro",
+    },
+    {
+        "type": "pdf",
+        "name": "Bangladesh Gazette",
+        "site": "bangladesh_gazette",
+    },
+    {
+        "type": "pdf",
+        "name": "央行 - 政策文件",
+        "site": "bb_policy",
+    },
+    {
+        "type": "pdf",
+        "name": "财政部 - 预算文件",
+        "site": "mof_budget",
+    },
+]
+
 # === 统一数据源列表（所有插件共用）===
-SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + BROWSER_SOURCES + SCRAPER_SOURCES
+SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + BROWSER_SOURCES + PDF_SOURCES + SCRAPER_SOURCES
 
 
 # === 产业分类标签 ===
