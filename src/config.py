@@ -90,6 +90,110 @@ NEWSAPI_SOURCES = [
     },
 ]
 
+# === API 金融/贸易数据接口 ===
+# 通过 REST API 获取宏观经济指标、汇率等结构化数据
+API_SOURCES = [
+    # --- 世界银行 API（免费，无需 Key） ---
+    {
+        "type": "api",
+        "name": "WorldBank - GDP Growth",
+        "api_type": "worldbank",
+        "indicator": "NY.GDP.MKTP.KD.ZG",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - Inflation",
+        "api_type": "worldbank",
+        "indicator": "FP.CPI.TOTL.ZG",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - Current Account",
+        "api_type": "worldbank",
+        "indicator": "BN.CAB.XOKA.GD.ZS",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - FDI Inflow",
+        "api_type": "worldbank",
+        "indicator": "BX.KLT.DINV.WD.GD.ZS",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - External Debt",
+        "api_type": "worldbank",
+        "indicator": "DT.DOD.DECT.GN.ZS",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - Export Growth",
+        "api_type": "worldbank",
+        "indicator": "NE.EXP.GNFS.KD.ZG",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - Import Growth",
+        "api_type": "worldbank",
+        "indicator": "NE.IMP.GNFS.KD.ZG",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - GDP (USD)",
+        "api_type": "worldbank",
+        "indicator": "NY.GDP.MKTP.CD",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - Foreign Reserves",
+        "api_type": "worldbank",
+        "indicator": "FI.RES.TOTL.CD",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - Merchandise Exports",
+        "api_type": "worldbank",
+        "indicator": "BX.GSR.MRCH.CD",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - Merchandise Imports",
+        "api_type": "worldbank",
+        "indicator": "BM.GSR.MRCH.CD",
+        "country": "BD",
+    },
+    {
+        "type": "api",
+        "name": "WorldBank - Unemployment",
+        "api_type": "worldbank",
+        "indicator": "SL.UEM.TOTL.ZS",
+        "country": "BD",
+    },
+    # --- 孟加拉央行汇率 ---
+    {
+        "type": "api",
+        "name": "Bangladesh Bank - Exchange Rate",
+        "api_type": "bangladesh_bank",
+    },
+    # --- Trading Economics（预留，需配置 TRADING_ECONOMICS_KEY） ---
+    # {
+    #     "type": "api",
+    #     "name": "TE - Bangladesh GDP",
+    #     "api_type": "trading_economics",
+    #     "indicator": "gdp",
+    #     "country": "bangladesh",
+    # },
+]
+
 # === 网页直接抓取源（无 RSS / RSS 更新慢的网站）===
 # 使用 requests + BeautifulSoup 抓取首页/栏目列表页
 # 注意：部分网站有 Cloudflare 防护（如 gov.bd 域名），requests 无法直接抓取
@@ -161,7 +265,7 @@ SCRAPER_SOURCES = [
 ]
 
 # === 统一数据源列表（所有插件共用）===
-SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + SCRAPER_SOURCES
+SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + SCRAPER_SOURCES
 
 
 # === 产业分类标签 ===

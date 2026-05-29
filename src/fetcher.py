@@ -9,6 +9,7 @@ from datetime import datetime
 from src.fetchers.rss_fetcher import RSSFetcher
 from src.fetchers.newsapi_fetcher import NewsAPIFetcher
 from src.fetchers.scraper_fetcher import WebScraperFetcher
+from src.fetchers.api_fetcher import APIFetcher
 from src.config import SOURCES
 
 # 插件注册中心：type -> Fetcher 类
@@ -16,6 +17,7 @@ FETCHER_REGISTRY = {
     "rss": RSSFetcher,
     "newsapi": NewsAPIFetcher,
     "scraper": WebScraperFetcher,
+    "api": APIFetcher,
 }
 
 
@@ -29,8 +31,9 @@ def fetch_all_sources(hours=24):
 
     rss_count = len([s for s in sources if s.get("type", "rss") == "rss"])
     api_count = len([s for s in sources if s.get("type") == "newsapi"])
+    api_data_count = len([s for s in sources if s.get("type") == "api"])
     scraper_count = len([s for s in sources if s.get("type") == "scraper"])
-    print(f"[FETCH] 总数据源: {len(sources)} 个 (RSS: {rss_count}, NewsAPI: {api_count}, Scraper: {scraper_count})")
+    print(f"[FETCH] 总数据源: {len(sources)} 个 (RSS: {rss_count}, NewsAPI: {api_count}, DataAPI: {api_data_count}, Scraper: {scraper_count})")
 
     for i, src in enumerate(sources, 1):
         source_type = src.get("type", "rss")
