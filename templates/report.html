@@ -219,6 +219,7 @@
       </div>
       <div class="item-summary">
         <strong>[{{ r.sector }}]</strong> {{ r.summary_cn }}
+        <br><a href="{{ r.link }}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none;font-weight:500;">查看原文 →</a>
       </div>
       <div class="item-meta">实体: {{ r.entities|join(', ') }} | 来源: {{ r.source }} | 依据: {{ r.reason }}</div>
     </div>
@@ -240,6 +241,7 @@
       </div>
       <div class="item-summary">
         <strong>[{{ p.sector }}]</strong> {{ p.summary_cn }}
+        <br><a href="{{ p.link }}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none;font-weight:500;">查看原文 →</a>
       </div>
       <div class="item-meta">实体: {{ p.entities|join(', ') }} | 依据: {{ p.reason }} | {{ p.pub_date }}</div>
     </div>
@@ -262,9 +264,12 @@
       {% else %}<span class="tag tag-neu">{{ item.impact_cn }}</span>{% endif %}
       <span class="tag tag-src">{{ item.source }}</span>
     </div>
-    <div class="item-summary">{{ item.summary_cn }}</div>
+    <div class="item-summary">
+      <a href="{{ item.link }}" target="_blank" style="color:var(--text);text-decoration:none;">{{ item.summary_cn }}</a>
+    </div>
     <div class="item-meta">
       实体：{{ item.entities|join(', ') }} | 依据：{{ item.reason }} | {{ item.pub_date }}
+      {% if item.link %}<a href="{{ item.link }}" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500;margin-left:auto;">原文 →</a>{% endif %}
     </div>
   </div>
   {% endfor %}
