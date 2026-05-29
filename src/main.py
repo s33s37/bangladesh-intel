@@ -9,8 +9,11 @@ import os
 import time
 from datetime import datetime
 
-# GitHub Actions 从仓库根目录运行：python -m src.main
-# 所以这里用 src. 前缀导入
+# 确保项目根目录在 sys.path 中（兼容 python src/main.py 和 python -m src.main 两种方式）
+_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
+
 from src.fetcher import fetch_all_sources, fetch_for_test
 from src.processor import batch_analyze, get_top_signals
 from src.generator import generate_html

@@ -37,7 +37,7 @@ jobs:
           WECHAT_WEBHOOK_URL: ${{ secrets.WECHAT_WEBHOOK_URL }}
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
-          python src/main.py
+          python -m src.main
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
