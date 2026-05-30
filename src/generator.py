@@ -5,9 +5,61 @@
 """
 
 import os
+import re
 from jinja2 import Environment, FileSystemLoader
 from datetime import datetime
 from src.config import SECTORS
+
+
+def _cn_digraphs(text):
+    """提取中文摘要中的2字重叠词作为特征"""
+    tokens = set()
+    parts = re.findall(r'[\u4e00-\u9fff]{2,}', text)
+    for part in parts:
+        for i in range(len(part) - 1):
+            tokens.add(part[i:i+2])
+    return tokens
+
+
+def _dedup_items(items):
+    """基于中文摘要相似度合并同一事件的多个来源报道"""
+    if not items:
+        return items
+
+    # 预计算所有 token 集（仅基于中文摘要，不含英文标题）
+    item_tokens = []
+    for item in items:
+        text = item.get('summary_cn', '')
+        tokens = _cn_digraphs(text)
+        # 加入摘要整体指纹
+        fp = text.replace(' ', '')[:15]
+        if len(fp) >= 6:
+            tokens.add(fp)
+        item_tokens.append(tokens)
+
+    # 按重要性排序（高>中>低），优先保留高质量条目
+    priority = {"高": 0, "中": 1, "低": 2}
+    ranked = sorted(enumerate(items), key=lambda x: priority.get(x[1].get("importance", "低"), 3))
+
+    kept = []
+    kept_tokens = []
+    for idx, item in ranked:
+        tokens = item_tokens[idx]
+        is_dup = False
+        for kt in kept_tokens:
+            if not tokens or not kt:
+                continue
+            # Jaccard 相似度 = 交集 / 并集
+            overlap = len(tokens & kt) / len(tokens | kt)
+            if overlap > 0.30:
+                is_dup = True
+                break
+        if not is_dup:
+            kept.append(item)
+            kept_tokens.append(tokens)
+
+    # 恢复原始顺序
+    return kept
 
 
 def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
@@ -17,6 +69,13 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
     output_dir: 输出目录
     model_name: 使用的AI模型名（用于页脚展示）
     """
+    # 语义去重：合并同一事件的多来源重复报道
+    before_dedup = len(intel_items)
+    intel_items = _dedup_items(intel_items)
+    deduped = before_dedup - len(intel_items)
+    if deduped:
+        print(f"[GEN] 语义去重: 合并 {deduped} 条重复报道")
+
     # 加载模板
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("report.html")
