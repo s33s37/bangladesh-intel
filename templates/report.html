@@ -250,6 +250,28 @@
 </div>
 {% endif %}
 
+{% if risk_events %}
+<div class="section">
+  <div class="policy-box">
+    <div class="policy-head" style="background:#fef2f2;border-left-color:#dc2626;color:#dc2626;">⚠️ 风险事件（实时监控）</div>
+    {% for e in risk_events %}
+    <div class="item">
+      <div class="item-header">
+        <span class="tag tag-type">{{ e.intel_type }}</span>
+        <span class="tag {% if e.impact_cn == '正面' %}tag-pos{% elif e.impact_cn == '负面' %}tag-neg{% else %}tag-neu{% endif %}">{{ e.impact_cn }}</span>
+        <span class="tag tag-src">{{ e.source }}</span>
+      </div>
+      <div class="item-summary">
+        <strong>[{{ e.sector }}]</strong> {{ e.summary_cn }}
+        <br><a href="{{ e.link }}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none;font-weight:500;">查看原文 →</a>
+      </div>
+      <div class="item-meta">实体: {{ e.entities|join(', ') }} | 依据: {{ e.reason }} | {{ e.pub_date }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 {% for sec in sector_list %}
 {% set items = sectors[sec] %}
 {% set is_other = (sec == "其他") %}
