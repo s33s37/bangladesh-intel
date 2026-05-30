@@ -25,27 +25,29 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
     total = len(intel_items)
     red_flags = [i for i in intel_items if i.get("red_flag")]
     policy_radar = [i for i in intel_items if i.get("intel_type") == "政策变动"]
-    risk_events = [i for i in intel_items if i.get("intel_type") == "风险事件" and not i.get("red_flag")]
     positive_count = len([i for i in intel_items if i.get("impact_cn") == "正面"])
 
-    # 风险事件清单（含已标记 red_flag 的，完整列表）
-    all_risk_events = [i for i in intel_items if i.get("intel_type") == "风险事件"]
+    # 已在顶部固定板块显示的条目ID（避免下方重复）
+    top_section_ids = set()
+    for e in intel_items:
+        if e.get("intel_type") in ("政策变动", "风险事件") or e.get("red_flag"):
+            top_section_ids.add(id(e))
 
     # 按产业分组
     sectors_data = {}
     other_by_type = {}  # "其他"板块按情报类型再分组
-    risk_event_ids = {id(e) for e in all_risk_events}  # 已提取到独立板块，从"其他"中排除
     for item in intel_items:
         sec = item.get("sector", "其他")
+
+        # 已在顶部政策雷达/风险预警/风险事件显示的，下方不再重复
+        if id(item) in top_section_ids:
+            continue
 
         # "其他"板块只保留重要条目（高/中重要度，或结构化指标数据）
         if sec == "其他":
             imp = item.get("importance", "低")
             is_indicator = item.get("item_type") == "indicator"
             if imp not in ("高", "中") and not is_indicator:
-                continue
-            # 风险事件已挪到独立板块，"其他"中不再重复
-            if id(item) in risk_event_ids:
                 continue
             # 同时按情报类型分组
             itype = item.get("intel_type", "其他")
@@ -91,7 +93,7 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
         positive_count=positive_count,
         red_flags=red_flags[:5],  # 最多显示5条预警
         policy_radar=policy_radar[:8],  # 最多显示8条政策
-        risk_events=all_risk_events[:10],  # 最多显示10条风险事件
+        risk_events=[i for i in intel_items if i.get("intel_type") == "风险事件"][:10],  # 最多显示10条风险事件
         sectors=sectors_data,
         sector_list=sector_list,
         other_by_type=other_by_type,
