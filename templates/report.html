@@ -272,6 +272,28 @@
 </div>
 {% endif %}
 
+{% if market_data %}
+<div class="section">
+  <div class="policy-box">
+    <div class="policy-head" style="background:#f0fdf4;border-left-color:#16a34a;color:#16a34a;">📊 市场数据（关键指标）</div>
+    {% for m in market_data %}
+    <div class="item">
+      <div class="item-header">
+        <span class="tag tag-type">{{ m.intel_type }}</span>
+        <span class="tag {% if m.impact_cn == '正面' %}tag-pos{% elif m.impact_cn == '负面' %}tag-neg{% else %}tag-neu{% endif %}">{{ m.impact_cn }}</span>
+        <span class="tag tag-src">{{ m.source }}</span>
+      </div>
+      <div class="item-summary">
+        <strong>[{{ m.sector }}]</strong> {{ m.summary_cn }}
+        <br><a href="{{ m.link }}" target="_blank" style="color:var(--blue);font-size:12px;text-decoration:none;font-weight:500;">查看原文 →</a>
+      </div>
+      <div class="item-meta">实体: {{ m.entities|join(', ') }} | 依据: {{ m.reason }} | {{ m.pub_date }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 {% for sec in sector_list %}
 {% set items = sectors[sec] %}
 {% set is_other = (sec == "其他") %}

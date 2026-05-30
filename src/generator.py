@@ -89,7 +89,7 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
     # 已在顶部固定板块显示的条目ID（避免下方重复）
     top_section_ids = set()
     for e in intel_items:
-        if e.get("intel_type") in ("政策变动", "风险事件") or e.get("red_flag"):
+        if e.get("intel_type") in ("政策变动", "风险事件", "市场数据") or e.get("red_flag"):
             top_section_ids.add(id(e))
 
     # 按产业分组
@@ -153,6 +153,7 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
         red_flags=red_flags[:5],  # 最多显示5条预警
         policy_radar=policy_radar[:8],  # 最多显示8条政策
         risk_events=[i for i in intel_items if i.get("intel_type") == "风险事件" and i.get("importance") in ("高", "中")][:10],  # 最多显示10条风险事件
+        market_data=[i for i in intel_items if i.get("intel_type") == "市场数据" and i.get("importance") in ("高", "中")][:10],  # 最多显示10条市场数据
         sectors=sectors_data,
         sector_list=sector_list,
         other_by_type=other_by_type,
