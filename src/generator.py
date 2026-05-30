@@ -29,6 +29,7 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
 
     # 按产业分组
     sectors_data = {}
+    other_by_type = {}  # "其他"板块按情报类型再分组
     for item in intel_items:
         sec = item.get("sector", "其他")
 
@@ -38,6 +39,11 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
             is_indicator = item.get("item_type") == "indicator"
             if imp not in ("高", "中") and not is_indicator:
                 continue
+            # 同时按情报类型分组
+            itype = item.get("intel_type", "其他")
+            if itype not in other_by_type:
+                other_by_type[itype] = []
+            other_by_type[itype].append(item)
 
         if sec not in sectors_data:
             sectors_data[sec] = []
@@ -47,12 +53,25 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
     priority = {"高": 0, "中": 1, "低": 2}
     for sec in sectors_data:
         sectors_data[sec].sort(key=lambda x: priority.get(x.get("importance", "低"), 3))
+    for itype in other_by_type:
+        other_by_type[itype].sort(key=lambda x: priority.get(x.get("importance", "低"), 3))
+
+    # 情报类型排序：市场数据 > 风险事件 > 政策变动 > 其他
+    type_order = {"市场数据": 0, "风险事件": 1, "政策变动": 2, "项目中标": 3, "投融资": 4, "供应链": 5, "人事变动": 6, "其他": 7}
+    other_type_list = sorted(other_by_type.keys(), key=lambda t: type_order.get(t, 99))
 
     # 只保留有数据的产业，按预设顺序排列
     sector_list = [s for s in SECTORS if s in sectors_data and sectors_data[s]]
 
     # 计算期数（基于日期）
     issue_no = datetime.now().strftime("%Y%m%d")[2:]  # 例如 260528
+
+    # 情报类型图标映射
+    TYPE_ICONS = {
+        "市场数据": "📊", "风险事件": "⚠️", "政策变动": "📜",
+        "项目中标": "🏆", "投融资": "💰", "供应链": "🔗",
+        "人事变动": "👤", "其他": "📋",
+    }
 
     # 渲染HTML
     html = template.render(
@@ -66,6 +85,9 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
         policy_radar=policy_radar[:8],  # 最多显示8条政策
         sectors=sectors_data,
         sector_list=sector_list,
+        other_by_type=other_by_type,
+        other_type_list=other_type_list,
+        type_icons=TYPE_ICONS,
         model_name=model_name
     )
 

@@ -252,27 +252,59 @@
 
 {% for sec in sector_list %}
 {% set items = sectors[sec] %}
+{% set is_other = (sec == "其他") %}
 <div class="section">
   <div class="sector-title">{{ sec }}（{{ items|length }}）</div>
-  {% for item in items %}
-  <div class="item {% if item.importance == '高' %}item-high{% endif %}">
-    <div class="item-header">
-      {% if item.importance == '高' %}<span class="tag tag-high">高</span>{% endif %}
-      <span class="tag tag-type">{{ item.intel_type }}</span>
-      {% if item.impact_cn == '正面' %}<span class="tag tag-pos">正面</span>
-      {% elif item.impact_cn == '负面' %}<span class="tag tag-neg">负面</span>
-      {% else %}<span class="tag tag-neu">{{ item.impact_cn }}</span>{% endif %}
-      <span class="tag tag-src">{{ item.source }}</span>
+
+  {# "其他"板块按情报类型分组显示 #}
+  {% if is_other and other_by_type %}
+    {% for itype in other_type_list %}
+    {% set type_items = other_by_type[itype] %}
+    {% set icon = type_icons.get(itype, "📋") %}
+    <div style="font-size:13px;font-weight:600;color:var(--muted);padding:10px 14px 4px 14px;border-bottom:1px solid #f3f4f6;">{{ icon }} {{ itype }}（{{ type_items|length }}）</div>
+    {% for item in type_items %}
+    <div class="item {% if item.importance == '高' %}item-high{% endif %}">
+      <div class="item-header">
+        {% if item.importance == '高' %}<span class="tag tag-high">高</span>{% endif %}
+        <span class="tag tag-type">{{ item.intel_type }}</span>
+        {% if item.impact_cn == '正面' %}<span class="tag tag-pos">正面</span>
+        {% elif item.impact_cn == '负面' %}<span class="tag tag-neg">负面</span>
+        {% else %}<span class="tag tag-neu">{{ item.impact_cn }}</span>{% endif %}
+        <span class="tag tag-src">{{ item.source }}</span>
+      </div>
+      <div class="item-summary">
+        <a href="{{ item.link }}" target="_blank" style="color:var(--text);text-decoration:none;">{{ item.summary_cn }}</a>
+      </div>
+      <div class="item-meta">
+        实体：{{ item.entities|join(', ') }} | 依据：{{ item.reason }} | {{ item.pub_date }}
+        {% if item.link %}<a href="{{ item.link }}" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500;margin-left:auto;">原文 →</a>{% endif %}
+      </div>
     </div>
-    <div class="item-summary">
-      <a href="{{ item.link }}" target="_blank" style="color:var(--text);text-decoration:none;">{{ item.summary_cn }}</a>
+    {% endfor %}
+    {% endfor %}
+
+  {# 其他行业板块正常显示 #}
+  {% else %}
+    {% for item in items %}
+    <div class="item {% if item.importance == '高' %}item-high{% endif %}">
+      <div class="item-header">
+        {% if item.importance == '高' %}<span class="tag tag-high">高</span>{% endif %}
+        <span class="tag tag-type">{{ item.intel_type }}</span>
+        {% if item.impact_cn == '正面' %}<span class="tag tag-pos">正面</span>
+        {% elif item.impact_cn == '负面' %}<span class="tag tag-neg">负面</span>
+        {% else %}<span class="tag tag-neu">{{ item.impact_cn }}</span>{% endif %}
+        <span class="tag tag-src">{{ item.source }}</span>
+      </div>
+      <div class="item-summary">
+        <a href="{{ item.link }}" target="_blank" style="color:var(--text);text-decoration:none;">{{ item.summary_cn }}</a>
+      </div>
+      <div class="item-meta">
+        实体：{{ item.entities|join(', ') }} | 依据：{{ item.reason }} | {{ item.pub_date }}
+        {% if item.link %}<a href="{{ item.link }}" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500;margin-left:auto;">原文 →</a>{% endif %}
+      </div>
     </div>
-    <div class="item-meta">
-      实体：{{ item.entities|join(', ') }} | 依据：{{ item.reason }} | {{ item.pub_date }}
-      {% if item.link %}<a href="{{ item.link }}" target="_blank" style="color:var(--blue);text-decoration:none;font-weight:500;margin-left:auto;">原文 →</a>{% endif %}
-    </div>
-  </div>
-  {% endfor %}
+    {% endfor %}
+  {% endif %}
 </div>
 {% endfor %}
 
