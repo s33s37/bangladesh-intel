@@ -211,7 +211,7 @@
   <div class="alert-box">
     <div class="alert-head">🚨 今日风险预警（需关注）</div>
     {% for r in red_flags %}
-    <div class="item" style="padding:8px 0;">
+    <div class="item">
       <div class="item-header">
         <span class="tag tag-high">{{ r.importance }}</span>
         <span class="tag tag-neg">{{ r.impact_cn }}</span>
@@ -233,7 +233,7 @@
   <div class="policy-box">
     <div class="policy-head">📜 政策雷达（近24小时官方动作）</div>
     {% for p in policy_radar %}
-    <div class="item" style="padding:8px 0;">
+    <div class="item">
       <div class="item-header">
         <span class="tag tag-type">{{ p.intel_type }}</span>
         <span class="tag {% if p.impact_cn == '正面' %}tag-pos{% elif p.impact_cn == '负面' %}tag-neg{% else %}tag-neu{% endif %}">{{ p.impact_cn }}</span>
