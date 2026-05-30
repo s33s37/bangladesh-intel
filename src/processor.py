@@ -5,8 +5,9 @@
 
 import os
 import json
+import re
 from openai import OpenAI
-from src.config import SECTORS, TYPES
+from src.config import RED_FLAG_KEYWORDS, SECTORS, SECTOR_KEYWORDS, TYPES
 
 # 模型选择：
 # - deepseek-chat: DeepSeek 通用对话，速度快，性价比高（推荐）
@@ -55,6 +56,17 @@ def get_model_name():
     except ValueError:
         return "unconfigured"
     return MODEL_NAME
+
+
+TYPE_KEYWORDS = {
+    "政策变动": ["policy", "regulation", "law", "tariff", "duty", "tax", "ban", "quota", "budget", "minister", "government", "cabinet", "SRO"],
+    "项目中标": ["tender", "bid", "contract", "award", "project", "construction", "inauguration", "launch"],
+    "投融资": ["investment", "funding", "loan", "FDI", "IPO", "finance", "bank", "capital", "stake"],
+    "供应链": ["supply", "shortage", "export", "import", "shipment", "port", "logistics", "factory", "production"],
+    "人事变动": ["appoint", "resign", "chairman", "ceo", "director", "minister", "secretary"],
+    "风险事件": ["fire", "strike", "protest", "accident", "crisis", "default", "fraud", "lawsuit", "shutdown", "shortage"],
+    "市场数据": ["growth", "inflation", "price", "export", "import", "market", "sales", "revenue", "stock"],
+}
 
 # AI返回英文产业名 → 中文产业名 映射表
 SECTOR_NAME_MAP = {
@@ -152,6 +164,13 @@ PROMPT_TEMPLATE = """你是一名资深的孟加拉国商业情报分析师，�
 """
 
 
+def _contains_keyword(text_lower, keyword):
+    keyword_lower = keyword.lower()
+    if re.search(r'[a-z0-9]', keyword_lower):
+        return re.search(rf'(?<![a-z0-9]){re.escape(keyword_lower)}(?![a-z0-9])', text_lower) is not None
+    return keyword_lower in text_lower
+
+
 def _keyword_suggest_sector(title, content):
     """关键词预判产业：返回 (sector_name, confidence) 或 (None, 0)"""
     text = f"{title} {content}".lower()
@@ -159,11 +178,88 @@ def _keyword_suggest_sector(title, content):
     best_score = 0
     for sector, keywords_str in SECTOR_HINTS.items():
         keywords = [k.strip().lower() for k in keywords_str.replace("，", ",").split(",")]
-        score = sum(1 for kw in keywords if kw and kw in text)
+        score = sum(1 for kw in keywords if kw and _contains_keyword(text, kw))
         if score > best_score:
             best_score = score
             best_sector = sector
     return best_sector, best_score
+
+
+def _match_by_keywords(text, mapping, default):
+    text_lower = text.lower()
+    best_name = default
+    best_score = 0
+    for name, keywords in mapping.items():
+        score = sum(1 for kw in keywords if _contains_keyword(text_lower, kw))
+        if score > best_score:
+            best_name = name
+            best_score = score
+    return best_name
+
+
+def _match_sector(title, content):
+    title_lower = title.lower()
+    content_lower = content.lower()
+    best_sector = "其他"
+    best_score = 0
+
+    for sector, keywords in SECTOR_KEYWORDS.items():
+        score = 0
+        for keyword in keywords:
+            if _contains_keyword(title_lower, keyword):
+                score += 3
+            if _contains_keyword(content_lower, keyword):
+                score += 1
+        if score > best_score:
+            best_sector = sector
+            best_score = score
+
+    return best_sector
+
+
+def _fallback_summary(title, content):
+    base = title.strip() or content.strip()
+    if len(base) > 90:
+        base = base[:87].rstrip() + "..."
+    return f"来源消息：{base}" if base else "来源消息待核实"
+
+
+def fallback_analyze(title, content, source_name, reason="本地规则"):
+    """
+    无 AI key 或 AI 调用失败时的本地规则分析，保证日报仍可读。
+    """
+    text = f"{title}\n{content}"
+    sector = _match_sector(title, content)
+    intel_type = _match_by_keywords(text, TYPE_KEYWORDS, "其他")
+    text_lower = text.lower()
+    red_flag = any(_contains_keyword(text_lower, kw) for kw in RED_FLAG_KEYWORDS)
+
+    if red_flag:
+        impact = "负面"
+        importance = "高"
+        if intel_type == "其他":
+            intel_type = "风险事件"
+    elif intel_type in ("政策变动", "项目中标", "投融资"):
+        impact = "待观察"
+        importance = "中"
+    else:
+        impact = "中性"
+        importance = "低"
+
+    return {
+        "sector": sector if sector in SECTORS else "其他",
+        "intel_type": intel_type if intel_type in TYPES else "其他",
+        "entities": [source_name] if source_name else [],
+        "summary_cn": _fallback_summary(title, content),
+        "impact_cn": impact,
+        "importance": importance,
+        "red_flag": red_flag,
+        "reason": reason,
+        "title": title,
+        "link": "",
+        "source": source_name,
+        "pub_date": "",
+    }
 
 
 def analyze_one(title, content, source_name):
@@ -171,6 +267,9 @@ def analyze_one(title, content, source_name):
     调用 DeepSeek 分析单条新闻
     """
     try:
+        if get_model_name() == "unconfigured":
+            return fallback_analyze(title, content, source_name, reason="无AI密钥")
+
         # 关键词预判：给AI提供一个产业建议
         suggested_sector, kw_score = _keyword_suggest_sector(title, content)
         if suggested_sector and kw_score >= 2:
@@ -236,21 +335,8 @@ def analyze_one(title, content, source_name):
         return result
 
     except Exception as e:
-        # 任何异常都返回默认结构，保证流程不中断
-        return {
-            "sector": "其他",
-            "intel_type": "其他",
-            "entities": [],
-            "summary_cn": f"AI解析异常: {str(e)[:30]}",
-            "impact_cn": "待观察",
-            "importance": "低",
-            "red_flag": False,
-            "reason": "解析失败",
-            "title": title,
-            "link": "",
-            "source": source_name,
-            "pub_date": ""
-        }
+        # 任何异常都走本地规则兜底，保证流程不中断且报告可读
+        return fallback_analyze(title, content, source_name, reason=f"AI失败:{str(e)[:8]}")
 
 
 def analyze_indicator(entry):

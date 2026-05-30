@@ -30,3 +30,54 @@ def test_indicator_entries_do_not_call_ai(monkeypatch):
 
     assert result[0]["intel_type"] == "市场数据"
     assert result[0]["item_type"] == "indicator"
+
+
+def test_news_entries_fallback_when_ai_is_unconfigured(monkeypatch):
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(processor, "_read_optional_key", lambda path: "")
+    processor.client = None
+    processor.MODEL_NAME = None
+
+    result = processor.analyze_one(
+        "Bangladesh garment exports face new tariff pressure",
+        "Exporters warned that duty changes may affect RMG shipments.",
+        "Test Source",
+    )
+
+    assert result["sector"] == "成衣纺织"
+    assert result["intel_type"] == "政策变动"
+    assert result["summary_cn"].startswith("来源消息：")
+    assert result["reason"] == "无AI密钥"
+
+
+def test_red_flag_keyword_uses_word_boundaries(monkeypatch):
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(processor, "_read_optional_key", lambda path: "")
+    processor.client = None
+    processor.MODEL_NAME = None
+
+    result = processor.analyze_one(
+        "Bangladesh solar investment reaches financial close",
+        "The project secured funding and grid connection support.",
+        "Test Source",
+    )
+
+    assert result["red_flag"] is False
+
+
+def test_fallback_prefers_specific_title_sector(monkeypatch):
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setattr(processor, "_read_optional_key", lambda path: "")
+    processor.client = None
+    processor.MODEL_NAME = None
+
+    result = processor.analyze_one(
+        "Chinese-backed solar park reaches financial close in Bangladesh",
+        "A 100MW power project reached investment close with local grid support.",
+        "Test Source",
+    )
+
+    assert result["sector"] == "太阳能"

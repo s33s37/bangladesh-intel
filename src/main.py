@@ -19,22 +19,26 @@ if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
 from src.fetcher import fetch_all_sources, fetch_for_test
+from src.demo_data import get_demo_entries
 from src.processor import batch_analyze, get_model_name, get_top_signals
 from src.generator import generate_html
 from src.storage import save_daily_json
 from src.wechat import send_wechat_summary
 
 
-def run_daily(test_mode=False):
+def run_daily(test_mode=False, demo_mode=False):
     print("=" * 60)
     print(f"🇧🇩 孟加拉商业情报日报 - 开始生成")
     print(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"模式: {'测试模式' if test_mode else '正式模式'}")
+    mode_label = "验收样本模式" if demo_mode else ("测试模式" if test_mode else "正式模式")
+    print(f"模式: {mode_label}")
     print("=" * 60)
 
     # Step 1: 数据采集
     print("\n[STEP 1/3] 数据采集...")
-    if test_mode:
+    if demo_mode:
+        entries = get_demo_entries()
+    elif test_mode:
         entries = fetch_for_test()
     else:
         entries = fetch_all_sources(hours=24)
@@ -98,6 +102,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Bangladesh Intel Daily")
     parser.add_argument("--test", action="store_true", help="测试模式（少量数据快速验证）")
+    parser.add_argument("--demo", action="store_true", help="验收样本模式（不访问网络，生成非空示例日报）")
     args = parser.parse_args()
 
-    run_daily(test_mode=args.test)
+    run_daily(test_mode=args.test, demo_mode=args.demo)

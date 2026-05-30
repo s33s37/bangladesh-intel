@@ -29,6 +29,10 @@ def _dedup_items(items):
     # 预计算所有 token 集（仅基于中文摘要，不含英文标题）
     item_tokens = []
     for item in items:
+        reason = item.get("reason", "")
+        if reason == "无AI密钥" or reason.startswith("AI失败"):
+            item_tokens.append({f"fallback:{item.get('title', '')}:{item.get('source', '')}"})
+            continue
         text = item.get('summary_cn', '')
         tokens = _cn_digraphs(text)
         # 加入摘要整体指纹
@@ -153,7 +157,7 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
         red_flags=red_flags[:5],  # 最多显示5条预警
         policy_radar=policy_radar[:8],  # 最多显示8条政策
         risk_events=[i for i in intel_items if i.get("intel_type") == "风险事件" and i.get("importance") in ("高", "中")][:10],  # 最多显示10条风险事件
-        market_data=[i for i in intel_items if i.get("intel_type") == "市场数据" and i.get("importance") in ("高", "中")][:10],  # 最多显示10条市场数据
+        market_data=[i for i in intel_items if i.get("intel_type") == "市场数据" and (i.get("importance") in ("高", "中") or i.get("item_type") == "indicator")][:10],  # 最多显示10条市场数据
         sectors=sectors_data,
         sector_list=sector_list,
         other_by_type=other_by_type,
