@@ -31,6 +31,14 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
     sectors_data = {}
     for item in intel_items:
         sec = item.get("sector", "其他")
+
+        # "其他"板块只保留重要条目（高/中重要度，或结构化指标数据）
+        if sec == "其他":
+            imp = item.get("importance", "低")
+            is_indicator = item.get("item_type") == "indicator"
+            if imp not in ("高", "中") and not is_indicator:
+                continue
+
         if sec not in sectors_data:
             sectors_data[sec] = []
         sectors_data[sec].append(item)
