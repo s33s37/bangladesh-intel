@@ -152,7 +152,7 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
         positive_count=positive_count,
         red_flags=red_flags[:5],  # 最多显示5条预警
         policy_radar=policy_radar[:8],  # 最多显示8条政策
-        risk_events=[i for i in intel_items if i.get("intel_type") == "风险事件"][:10],  # 最多显示10条风险事件
+        risk_events=[i for i in intel_items if i.get("intel_type") == "风险事件" and i.get("importance") in ("高", "中")][:10],  # 最多显示10条风险事件
         sectors=sectors_data,
         sector_list=sector_list,
         other_by_type=other_by_type,
