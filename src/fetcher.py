@@ -15,7 +15,7 @@ from src.fetchers.api_fetcher import APIFetcher
 from src.fetchers.browser_fetcher import BrowserFetcher
 from src.fetchers.pdf_fetcher import PDFFetcher
 from src.fetchers.social_fetcher import SocialFetcher
-from src.config import SOURCES
+from src.config import SOURCES, SECTORS, SECTOR_KEYWORDS
 
 # 插件注册中心：type -> Fetcher 类
 FETCHER_REGISTRY = {
@@ -93,6 +93,81 @@ def deduplicate_entries(entries):
     return unique_entries
 
 
+# 全局编译行业关键词正则（加速匹配）
+_SECTOR_PATTERNS = None
+
+
+def _build_sector_patterns():
+    """将 SECTOR_KEYWORDS 编译为 (sector_name, compiled_regex) 列表"""
+    global _SECTOR_PATTERNS
+    if _SECTOR_PATTERNS is not None:
+        return _SECTOR_PATTERNS
+    patterns = []
+    # 中文关键词：直接包含即可匹配
+    cn_aliases = {
+        "成衣纺织": ["成衣", "纺织", "服装", "面料", "制衣"],
+        "基建": ["基建", "桥梁", "港口", "铁路", "公路", "隧道", "地铁"],
+        "能源": ["能源", "电力", "天然气", "液化气", "电网", "发电"],
+        "太阳能": ["太阳能", "光伏", "新能源"],
+        "电动两轮车": ["电动自行车", "电动车", "电摩", "两轮车"],
+        "电动汽车": ["电动汽车", "新能源汽车", "充电桩"],
+        "制药": ["制药", "医药", "药品", "疫苗"],
+        "ICT电商": ["电商", "互联网", "软件", "信息技术", "数字化", "科技"],
+        "黄麻": ["黄麻"],
+        "皮革": ["皮革", "制鞋"],
+        "船舶拆解": ["拆船", "船舶回收"],
+        "渔业": ["渔业", "水产", "海鲜", "养虾"],
+        "农产品加工": ["农产品", "食品加工", "农业", "粮食"],
+        "陶瓷": ["陶瓷", "瓷砖"],
+        "家具": ["家具", "木材"],
+        "轻工制造": ["轻工", "制造", "五金"],
+        "造船": ["造船"],
+        "医疗器械": ["医疗器械", "医疗设备"],
+        "塑料": ["塑料", "包装"],
+        "家电": ["家电", "电器"],
+        "数字经济": ["数字经济", "人工智能", "区块链", "智慧城市"],
+    }
+    for sector in SECTORS:
+        keywords = SECTOR_KEYWORDS.get(sector, [])
+        # 加入中文别名
+        extra = cn_aliases.get(sector, [])
+        all_kw = list(set(keywords + extra))
+        if all_kw:
+            parts = []
+            for kw in all_kw:
+                escaped = re.escape(kw)
+                # 英文短词（字母+数字）加 \b 单词边界，避免 "ai" 匹配 "rain"
+                if re.match(r'^[a-zA-Z0-9]+$', kw):
+                    parts.append(r'\b' + escaped + r'\b')
+                else:
+                    parts.append(escaped)
+            pattern = re.compile('|'.join(parts), re.IGNORECASE)
+            patterns.append((sector, pattern))
+    _SECTOR_PATTERNS = patterns
+    return patterns
+
+
+def is_relevant_article(entry):
+    """
+    关键词预过滤：检查文章标题+摘要是否命中至少一个行业关键词。
+    命中率极低的文章（杂讯）直接丢弃，不进 AI 分析以节约成本。
+    """
+    text = f"{entry.get('title', '')} {entry.get('summary', '')}"
+    if len(text.strip()) < 10:
+        return False
+
+    patterns = _build_sector_patterns()
+    for sector, pattern in patterns:
+        if pattern.search(text):
+            return True
+
+    # API 结构化数据（世界银行等）总是保留
+    if entry.get("item_type") == "indicator":
+        return True
+
+    return False
+
+
 def fetch_all_sources(hours=24):
     """
     采集所有配置源的新闻
@@ -138,6 +213,13 @@ def fetch_all_sources(hours=24):
 
     unique_entries = deduplicate_entries(all_entries)
 
+    # 行业关键词预过滤：丢弃不相关的杂讯
+    before_filter = len(unique_entries)
+    unique_entries = [e for e in unique_entries if is_relevant_article(e)]
+    filtered = before_filter - len(unique_entries)
+    if filtered:
+        print(f"[FETCH] 行业关键词过滤: 丢弃 {filtered} 条不相关新闻")
+
     # 按时间倒序排列
     unique_entries.sort(key=lambda x: x.get("raw_date", datetime.utcnow()), reverse=True)
 
@@ -147,7 +229,7 @@ def fetch_all_sources(hours=24):
         print(f"[FETCH] 超过上限{max_items}条，截取最新{max_items}条")
         unique_entries = unique_entries[:max_items]
 
-    print(f"[FETCH] 去重后总计: {len(unique_entries)} 条")
+    print(f"[FETCH] 去重+过滤后总计: {len(unique_entries)} 条")
     return unique_entries
 
 
