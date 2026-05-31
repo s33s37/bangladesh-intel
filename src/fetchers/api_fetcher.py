@@ -3,10 +3,14 @@ API 数据抓取插件
 从金融/贸易/宏观经济数据接口获取结构化数据
 支持：世界银行 API、孟加拉央行汇率、Trading Economics（预留）
 """
+import json
 import os
+import re
 from datetime import datetime
 
 import requests
+from bs4 import BeautifulSoup
+from dateutil import parser as date_parser
 
 from src.fetchers.base import BaseFetcher
 
@@ -136,7 +140,11 @@ class APIFetcher(BaseFetcher):
         try:
             resp = requests.get(self.BB_EXCHANGE_API, headers=self.DEFAULT_HEADERS, timeout=30)
             resp.raise_for_status()
-            data = resp.json()
+            text = resp.content.decode("utf-8-sig").lstrip("\ufeff\r\n\t ")
+            try:
+                data = json.loads(text)
+            except json.JSONDecodeError:
+                return self._parse_bangladesh_bank_html(text, source_name)
 
             entries = []
             today = datetime.utcnow()
@@ -211,6 +219,55 @@ class APIFetcher(BaseFetcher):
             return []
 
     # ==================== Trading Economics（预留） ====================
+
+    def _parse_bangladesh_bank_html(self, text, source_name):
+        """Parse the official homepage exchange-rate card."""
+        soup = BeautifulSoup(text, "html.parser")
+        exchange = soup.select_one(".exchange")
+        if not exchange:
+            print("  [WARN] [Bangladesh Bank] No exchange-rate card found")
+            return []
+
+        rows = exchange.select(".display_table > div")
+        if len(rows) < 2:
+            print("  [WARN] [Bangladesh Bank] No exchange-rate rows found")
+            return []
+
+        updated = datetime.utcnow()
+        update_element = exchange.select_one(".last_update")
+        if update_element:
+            update_text = update_element.get_text(" ", strip=True)
+            update_text = re.sub(r"(?<=\d)(st|nd|rd|th)", "", update_text)
+            try:
+                updated = date_parser.parse(update_text, fuzzy=True)
+            except ValueError:
+                pass
+
+        entries = []
+        for row in rows[1:]:
+            cells = [cell.get_text(" ", strip=True) for cell in row.find_all("div")]
+            if len(cells) < 4:
+                continue
+            currency, highest, lowest, war = cells[:4]
+            entries.append({
+                "title": (
+                    f"[Bangladesh Bank] {currency}/BDT inter-bank rate "
+                    f"({updated.strftime('%m-%d')})"
+                ),
+                "link": "https://www.bb.org.bd/en/index.php/fxmarket/interbank_fxmarket",
+                "summary": (
+                    f"{currency}/BDT inter-bank exchange rate: "
+                    f"highest {highest}, lowest {lowest}, WAR {war}"
+                ),
+                "source": source_name,
+                "pub_date": updated.strftime("%m-%d %H:%M"),
+                "raw_date": updated,
+                "item_type": "indicator",
+            })
+
+        if entries:
+            print(f"  [OK] [Bangladesh Bank] HTML exchange rate: {len(entries)} items")
+        return entries
 
     def _fetch_trading_economics(self, config: dict) -> list:
         """抓取 Trading Economics 数据（需 API Key）"""

@@ -9,6 +9,7 @@ from datetime import datetime
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from src.fetchers.rss_fetcher import RSSFetcher
+from src.fetchers.json_news_fetcher import JSONNewsFetcher
 from src.fetchers.newsapi_fetcher import NewsAPIFetcher
 from src.fetchers.scraper_fetcher import WebScraperFetcher
 from src.fetchers.api_fetcher import APIFetcher
@@ -16,10 +17,12 @@ from src.fetchers.browser_fetcher import BrowserFetcher
 from src.fetchers.pdf_fetcher import PDFFetcher
 from src.fetchers.social_fetcher import SocialFetcher
 from src.config import SOURCES, SECTORS, SECTOR_KEYWORDS
+from src.storage import save_daily_json
 
 # 插件注册中心：type -> Fetcher 类
 FETCHER_REGISTRY = {
     "rss": RSSFetcher,
+    "json_news": JSONNewsFetcher,
     "newsapi": NewsAPIFetcher,
     "scraper": WebScraperFetcher,
     "api": APIFetcher,
@@ -38,6 +41,32 @@ TRACKING_PARAMS = {
     "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
     "fbclid", "gclid", "mc_cid", "mc_eid",
 }
+
+WEAK_SECTOR_KEYWORDS = {
+    "ac", "ai", "api", "app", "award", "bid", "completion", "fan",
+    "generation", "it", "milestone", "online", "platform", "power",
+    "sacking", "tea", "tv",
+}
+
+GENERAL_BUSINESS_PATTERN = re.compile(
+    r"\b(?:adb|bank|budget|business|commodit(?:y|ies)|customs|econom(?:y|ic)|"
+    r"export|fdi|financ(?:e|ial)|gdp|imf|import|industr(?:y|ial)|invest(?:ment|or)|"
+    r"manufactur\w*|market|price|remittance|retailers?|revenue|stocks?|tariff|"
+    r"tax(?:es)?|trade|world bank)\b",
+    re.IGNORECASE,
+)
+
+NOISE_TITLE_PATTERN = re.compile(
+    r"\b(?:accident|champions league|cricket|dead|death|detained|football|"
+    r"harass(?:ed|ment)?|hospital|killed|liverpool|match|newborns?|odi|"
+    r"psg|ronaldo|squad|tournament|tri-series|world cup)\b",
+    re.IGNORECASE,
+)
+
+HARD_NOISE_TITLE_PATTERN = re.compile(
+    r"\b(?:bomb threats?|illegal entry|illegally entering|measles|police)\b",
+    re.IGNORECASE,
+)
 
 
 def normalize_link(link):
@@ -152,13 +181,34 @@ def is_relevant_article(entry):
     关键词预过滤：检查文章标题+摘要是否命中至少一个行业关键词。
     命中率极低的文章（杂讯）直接丢弃，不进 AI 分析以节约成本。
     """
-    text = f"{entry.get('title', '')} {entry.get('summary', '')}"
+    title = re.sub(
+        r"\s[-|]\s(?:the )?[\w\s.&()]+$",
+        "",
+        entry.get("title", ""),
+    ).strip()
+    summary = entry.get("summary", "")
+    if entry.get("source", "").startswith("Google News"):
+        summary = ""
+    text = f"{title} {summary}"
     if len(text.strip()) < 10:
         return False
 
+    if entry.get("prequalified"):
+        return True
+
+    if HARD_NOISE_TITLE_PATTERN.search(title):
+        return False
+
+    if NOISE_TITLE_PATTERN.search(title) and not GENERAL_BUSINESS_PATTERN.search(title):
+        return False
+
+    if GENERAL_BUSINESS_PATTERN.search(text):
+        return True
+
     patterns = _build_sector_patterns()
     for sector, pattern in patterns:
-        if pattern.search(text):
+        matches = pattern.finditer(text)
+        if any(match.group(0).lower() not in WEAK_SECTOR_KEYWORDS for match in matches):
             return True
 
     # API 结构化数据（世界银行等）总是保留
@@ -174,6 +224,7 @@ def fetch_all_sources(hours=24):
     根据每个 source 的 type 字段自动选择对应插件
     """
     all_entries = []
+    rss_health = []
     sources = SOURCES
 
     rss_count = len([s for s in sources if s.get("type", "rss") == "rss"])
@@ -197,9 +248,37 @@ def fetch_all_sources(hours=24):
         fetcher = fetcher_class()
         try:
             entries = fetcher.fetch(src, hours)
+            entry_source_type = source_type
+            if source_type == "rss":
+                health = dict(getattr(fetcher, "last_health", {}))
+                fallback_config = src.get("fallback_json")
+                fallback_class = JSONNewsFetcher
+                fallback_type = "json_news_fallback"
+                if not fallback_config:
+                    fallback_config = src.get("fallback_scraper")
+                    fallback_class = WebScraperFetcher
+                    fallback_type = "scraper_fallback"
+                if not entries and fallback_config:
+                    fallback_source = {
+                        **fallback_config,
+                        "type": fallback_type,
+                        "name": f"{source_name} (Fallback)",
+                    }
+                    entries = fallback_class().fetch(fallback_source, hours)
+                    entry_source_type = fallback_type
+                    health["fallback_used"] = True
+                    health["fallback_count"] = len(entries)
+                    health["fallback_type"] = fallback_type
+                    if entries:
+                        print(
+                            f"  [{i}/{len(sources)}] [{source_name}] "
+                            f"RSS fallback: {len(entries)} items"
+                        )
+                rss_health.append(health)
+
             for entry in entries:
                 entry.setdefault("item_type", ITEM_TYPE_BY_SOURCE.get(source_type, "news"))
-                entry.setdefault("source_type", source_type)
+                entry.setdefault("source_type", entry_source_type)
             if entries:
                 print(f"  [{i}/{len(sources)}] [{source_name}]: {len(entries)} 条")
             else:
@@ -210,6 +289,12 @@ def fetch_all_sources(hours=24):
 
         # 礼貌延迟，避免触发限流
         time.sleep(0.3)
+
+    if rss_health:
+        try:
+            save_daily_json("source_health", rss_health)
+        except Exception as e:
+            print(f"[WARN] Failed to save RSS health report: {str(e)[:80]}")
 
     unique_entries = deduplicate_entries(all_entries)
 

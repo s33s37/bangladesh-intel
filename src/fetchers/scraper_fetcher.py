@@ -54,8 +54,19 @@ class WebScraperFetcher(BaseFetcher):
             items = soup.select(item_selector)
             entries = []
             for item in items[:15]:  # 最多取 15 条
-                title = self._extract_text(item, config.get("title_attr", "text"))
-                link = self._extract_link(item, config)
+                title_element = item
+                if config.get("title_selector"):
+                    title_element = item.select_one(config["title_selector"]) or item
+
+                link_element = item
+                if config.get("link_selector"):
+                    link_element = item.select_one(config["link_selector"]) or item
+
+                title = self._extract_text(
+                    title_element,
+                    config.get("title_attr", "text"),
+                )
+                link = self._extract_link(link_element, config)
                 summary = ""
                 if config.get("summary_selector"):
                     sum_elem = item.select_one(config["summary_selector"])

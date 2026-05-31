@@ -6,36 +6,114 @@
 # === RSS 源（通用媒体 + Google News）===
 RSS_SOURCES = [
     # 核心四大媒体
-    {"type": "rss", "name": "The Daily Star", "url": "https://www.thedailystar.net/frontpage/rss.xml"},
+    {"type": "rss", "name": "The Daily Star", "url": "https://www.thedailystar.net/frontpage/rss.xml", "enabled": False, "disabled_reason": "stale since 2022-07-22; business feed remains active"},
     {"type": "rss", "name": "The Daily Star - Business", "url": "https://www.thedailystar.net/business/rss.xml"},
-    {"type": "rss", "name": "BDNews24", "url": "https://bdnews24.com/?widgetName=rssfeed&widgetId=1150&getXmlFeed=true"},
-    {"type": "rss", "name": "The Business Standard", "url": "https://www.tbsnews.net/rss.xml"},
+    {"type": "rss", "name": "BDNews24", "url": "https://bdnews24.com/?widgetName=rssfeed&widgetId=1150&getXmlFeed=true", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 403; no verified fallback"},
+    {
+        "type": "rss",
+        "name": "The Business Standard",
+        "url": "https://www.tbsnews.net/rss.xml",
+        "fallback_scraper": {
+            "url": "https://www.tbsnews.net/economy",
+            "item_selector": ".card-title a",
+            "title_attr": "text",
+            "link_attr": "href",
+            "link_prefix": "https://www.tbsnews.net",
+            "summary_selector": ".card-intro",
+            "encoding": "utf-8",
+        },
+    },
     {"type": "rss", "name": "Dhaka Tribune", "url": "https://www.dhakatribune.com/feed/"},
 
     # 其他英文媒体
-    {"type": "rss", "name": "New Age", "url": "https://www.newagebd.net/rss.xml"},
-    {"type": "rss", "name": "The Financial Express", "url": "https://thefinancialexpress.com.bd/rss"},
+    {
+        "type": "rss",
+        "name": "New Age",
+        "url": "https://www.newagebd.net/rss.xml",
+        "fallback_scraper": {
+            "url": "https://www.newagebd.net/",
+            "item_selector": "a[href*='/post/']",
+            "link_prefix": "https://www.newagebd.net",
+        },
+    },
+    {
+        "type": "rss",
+        "name": "The Financial Express",
+        "url": "https://thefinancialexpress.com.bd/rss",
+        "fallback_json": {
+            "url": "https://api.thefinancialexpress.com.bd/api/en/home/category-economy",
+            "items_paths": ["featured", "posts", "titles", "oped"],
+            "link_prefix": "https://thefinancialexpress.com.bd",
+            "exclude_link_prefixes": ["/economy/global"],
+            "prequalified": True,
+        },
+    },
     {"type": "rss", "name": "Prothom Alo English", "url": "https://www.prothomalo.com/feed/"},
-    {"type": "rss", "name": "Bangladesh Post", "url": "https://bangladeshpost.net/rss.xml"},
-    {"type": "rss", "name": "The Dhaka Post", "url": "https://thedhakapost.com/rss.xml"},
-    {"type": "rss", "name": "Daily Sun", "url": "https://www.daily-sun.com/rss"},
-    {"type": "rss", "name": "The Independent", "url": "https://www.theindependentbd.com/rss"},
-    {"type": "rss", "name": "The Bangladesh Today", "url": "https://www.thebangladeshtoday.com/rss"},
-    {"type": "rss", "name": "United News of Bangladesh", "url": "https://unb.com.bd/rss"},
-    {"type": "rss", "name": "Bangladesh Sangbad Sangstha", "url": "https://bssnews.net/rss"},
+    {
+        "type": "rss",
+        "name": "Bangladesh Post",
+        "url": "https://bangladeshpost.net/rss.xml",
+        "fallback_scraper": {
+            "url": "https://bangladeshpost.net/",
+            "item_selector": "a[href*='/posts/']",
+            "link_prefix": "https://bangladeshpost.net",
+        },
+    },
+    {"type": "rss", "name": "The Dhaka Post", "url": "https://thedhakapost.com/rss.xml", "enabled": False, "disabled_reason": "stale since 2024-12-21"},
+    {
+        "type": "rss",
+        "name": "Daily Sun",
+        "url": "https://www.daily-sun.com/rss",
+        "fallback_scraper": {
+            "url": "https://www.daily-sun.com/",
+            "item_selector": ".positionRelative:has(> a.linkOverlay[href*='/business/'])",
+            "title_selector": "h2, h3",
+            "link_selector": "a.linkOverlay[href*='/business/']",
+            "link_prefix": "https://www.daily-sun.com",
+        },
+    },
+    {"type": "rss", "name": "The Independent", "url": "https://www.theindependentbd.com/rss", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 404; no verified fallback"},
+    {"type": "rss", "name": "The Bangladesh Today", "url": "https://www.thebangladeshtoday.com/rss", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 403; no verified fallback"},
+    {
+        "type": "rss",
+        "name": "United News of Bangladesh",
+        "url": "https://unb.com.bd/rss",
+        "fallback_scraper": {
+            "url": "https://unb.com.bd/",
+            "item_selector": (
+                ".truncate-3 a[href*='/category/'], "
+                ".truncate-2 a[href*='/category/'], "
+                ".truncate-1 a[href*='/category/']"
+            ),
+            "link_prefix": "https://unb.com.bd",
+        },
+    },
+    {
+        "type": "rss",
+        "name": "Bangladesh Sangbad Sangstha",
+        "url": "https://bssnews.net/rss",
+        "fallback_scraper": {
+            "url": "https://bssnews.net/",
+            "item_selector": (
+                "a._link[href*='/news/'], "
+                "marquee a[href*='/news-flash/']"
+            ),
+            "link_prefix": "https://bssnews.net",
+        },
+    },
 
     # 孟语媒体（可能有英文内容）
-    {"type": "rss", "name": "Jugantor", "url": "https://www.jugantor.com/feed/rss.xml"},
+    {"type": "rss", "name": "Jugantor", "url": "https://www.jugantor.com/feed/rss.xml", "enabled": False, "disabled_reason": "RSS endpoint returns HTML; no verified fallback"},
     {"type": "rss", "name": "Jagonews24", "url": "https://www.jagonews24.com/rss/rss.xml"},
-    {"type": "rss", "name": "Kaler Kantho", "url": "https://www.kalerkantho.com/rss.xml"},
-    {"type": "rss", "name": "Bangla News 24", "url": "https://www.banglanews24.com/rss/rss.xml"},
+    {"type": "rss", "name": "Kaler Kantho", "url": "https://www.kalerkantho.com/rss.xml", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 404; no verified fallback"},
+    {"type": "rss", "name": "Bangla News 24", "url": "https://www.banglanews24.com/rss/rss.xml", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 404; no verified fallback"},
     {"type": "rss", "name": "BD Pratidin", "url": "https://bd-pratidin.com/rss.xml"},
-    {"type": "rss", "name": "Samakal", "url": "https://www.samakal.com/rss.xml"},
-    {"type": "rss", "name": "Manab Zamin", "url": "https://www.mzamin.com/rss.xml"},
-    {"type": "rss", "name": "Daily Naya Diganta", "url": "https://dailynayadiganta.com/rss.xml"},
-    {"type": "rss", "name": "Inqilab", "url": "https://dailyinqilab.com/rss.xml"},
-    {"type": "rss", "name": "Jaijaidin", "url": "https://www.jaijaidinbd.com/rss.xml"},
-    {"type": "rss", "name": "Bhorer Kagoj", "url": "https://www.bhorerkagoj.com/rss.xml"},
+    {"type": "rss", "name": "Samakal", "url": "https://www.samakal.com/rss.xml", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 403; no verified fallback"},
+    {"type": "rss", "name": "Manab Zamin", "url": "https://www.mzamin.com/rss.xml", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 404; no verified fallback"},
+    {"type": "rss", "name": "Daily Naya Diganta", "url": "https://dailynayadiganta.com/rss.xml", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 500; no verified fallback"},
+    {"type": "rss", "name": "Inqilab", "url": "https://dailyinqilab.com/rss.xml", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 404; no verified fallback"},
+    {"type": "rss", "name": "Jaijaidin", "url": "https://www.jaijaidinbd.com/rss.xml", "enabled": False, "disabled_reason": "domain is suspended; no verified fallback"},
+    {"type": "rss", "name": "Bhorer Kagoj", "url": "https://www.bhorerkagoj.com/rss.xml", "enabled": False, "disabled_reason": "RSS endpoint returns HTTP 404; no verified fallback"},
 
     # 能源垂直媒体
     {"type": "rss", "name": "Energy Bangla", "url": "https://energybangla.com/feed"},
@@ -213,6 +291,8 @@ SCRAPER_SOURCES = [
     {
         "type": "scraper",
         "name": "TBS - Economy (Scraper)",
+        "enabled": False,
+        "disabled_reason": "covered by The Business Standard RSS fallback",
         "url": "https://www.tbsnews.net/economy",
         "item_selector": ".card-title a",
         "title_attr": "text",
@@ -227,6 +307,8 @@ SCRAPER_SOURCES = [
     {
         "type": "scraper",
         "name": "Prothom Alo - Business (Scraper)",
+        "enabled": False,
+        "disabled_reason": "selector returns no articles; active RSS feed remains healthy",
         "url": "https://www.prothomalo.com/business",
         "item_selector": ".title-link a",
         "title_attr": "text",
@@ -354,7 +436,8 @@ SOCIAL_SOURCES = [
 ]
 
 # === 统一数据源列表（所有插件共用）===
-SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + BROWSER_SOURCES + PDF_SOURCES + SOCIAL_SOURCES + SCRAPER_SOURCES
+ALL_SOURCES = RSS_SOURCES + NEWSAPI_SOURCES + API_SOURCES + BROWSER_SOURCES + PDF_SOURCES + SOCIAL_SOURCES + SCRAPER_SOURCES
+SOURCES = [source for source in ALL_SOURCES if source.get("enabled", True)]
 
 
 # === 产业分类标签 ===
@@ -395,7 +478,7 @@ SECTOR_KEYWORDS = {
     "皮革": ["leather", "tannery", "hide", "skin", "footwear", "bag", "belt", "wallet", "garment leather", "finished leather", "wet blue", "crust", "BFLLFEA", "Hazaribagh", "Savar tannery", "chrome", "vegetable tanning", "export"],
     "船舶拆解": ["ship breaking", "ship recycling", "HKC", "Hong Kong Convention", "yard", "scrap", "Alang", "Chittagong ship", "beaching", "plate", "re-rolling mill", "BSBA", "green yard", "certification", "IMO", "VLCC", "tanker", "bulk carrier", "hazardous waste", "asbestos"],
     "渔业": ["fish", "shrimp", "prawn", "aquaculture", "seafood", "frozen fish", "HACCP", "DoF", "BFDC", "export", "processing plant", "cold storage", "feed", "hatchery", "vannamei", "black tiger", "EU approval", "FDA", "depot", "landing center"],
-    "农产品加工": ["agro", "food processing", "rice", "sugar", "tea", "spice", "flour", "oil", "dairy", "meat", "poultry", "egg", "fruit", "vegetable", "juice", "snack", "biscuit", "noodle", "frozen food", "canning", "packaging", "BADC", "BSCIC"],
+    "农产品加工": ["agro", "crop", "food processing", "rice", "sugar", "tea", "spice", "flour", "oil", "dairy", "meat", "poultry", "egg", "fruit", "vegetable", "juice", "snack", "biscuit", "noodle", "frozen food", "canning", "packaging", "BADC", "BSCIC"],
     "陶瓷": ["ceramic", "tile", "sanitaryware", "pottery", "porcelain", "wall tile", "floor tile", "vitrified", "glazed", "BCMA", "furnace", "kiln", "natural gas", "clay", "feldspar", "export", "domestic market"],
     "家具": ["furniture", "wood", "wooden", "home decor", "interior", "office furniture", "BIFMA", "timber", "particle board", "MDF", "plywood", "rattan", "bamboo", "handicraft", "export", "EU market", "USA market"],
     "轻工制造": ["plastic", "polymer", "PET", "molding", "injection", "toy", "cosmetic", "battery", "paper", "packaging", "stationery", "sports goods", "bicycle", "leather goods", "synthetic", "polypropylene", "polyethylene", "BSCIC", "SME"],
