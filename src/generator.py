@@ -66,7 +66,7 @@ def _dedup_items(items):
     return kept
 
 
-def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
+def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat", return_stats=False):
     """
     生成HTML日报报告
     intel_items: processor返回的结构化情报列表
@@ -177,8 +177,14 @@ def generate_html(intel_items, output_dir="docs", model_name="deepseek-chat"):
     with open(archive_path, "w", encoding="utf-8") as f:
         f.write(html)
 
+    report_stats = {
+        "total": total,
+        "red_count": len(red_flags),
+        "policy_count": len(policy_radar),
+        "positive_count": positive_count,
+    }
     print(f"[GEN] Report generated: {output_path}, {archive_path} ({total} items, {len(red_flags)} red flags)")
-    return output_path
+    return (output_path, report_stats) if return_stats else output_path
 
 
 if __name__ == "__main__":

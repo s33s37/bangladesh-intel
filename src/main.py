@@ -72,24 +72,25 @@ def run_daily(test_mode=False, demo_mode=False):
 
     # Step 3: 生成报告
     print("\n[STEP 3/3] 生成HTML报告...")
-    output_path = generate_html(analyzed, model_name=get_model_name())
+    output_path, report_stats = generate_html(analyzed, model_name=get_model_name(), return_stats=True)
     print(f"[OK] 报告已生成: {output_path}")
 
     # 统计摘要
-    red_count = len([x for x in analyzed if x.get("red_flag")])
-    policy_count = len([x for x in analyzed if x.get("intel_type") == "政策变动"])
-    pos_count = len([x for x in analyzed if x.get("impact_cn") == "正面"])
+    total_count = report_stats["total"]
+    red_count = report_stats["red_count"]
+    policy_count = report_stats["policy_count"]
+    pos_count = report_stats["positive_count"]
 
     print("\n" + "=" * 60)
     print("[DAILY SUMMARY]")
-    print(f"  总条目:     {len(analyzed)}")
+    print(f"  总条目:     {total_count}")
     print(f"  风险预警:   {red_count} 🔴")
     print(f"  政策变动:   {policy_count} 📜")
     print(f"  正面信号:   {pos_count} ✅")
     print(f"  报告路径:   {output_path}")
     print("=" * 60)
     send_wechat_summary([
-        f"总条目: {len(analyzed)}",
+        f"总条目: {total_count}",
         f"风险预警: {red_count}",
         f"政策变动: {policy_count}",
         f"正面信号: {pos_count}",
